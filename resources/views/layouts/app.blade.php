@@ -22,6 +22,9 @@
             background:linear-gradient(180deg,#020617,#0f172a,#1e293b);
             color:white;
             padding:25px;
+
+            overflow-y:auto;
+            overflow-x:hidden;
         }
 
         .sidebar h3{
@@ -33,14 +36,21 @@
             display:block;
             color:#cbd5e1;
             text-decoration:none;
-            padding:12px;
+            padding:12px 15px;
             margin-bottom:8px;
-            border-radius:10px;
+            border-radius:12px;
+            transition:.3s;
         }
 
         .sidebar a:hover{
-            background:#1e293b;
+            background:#1e40af;
             color:white;
+        }
+
+        .active-menu{
+            background:#2563eb;
+            color:white !important;
+            font-weight:600;
         }
 
         .main{
@@ -87,6 +97,21 @@
             -webkit-line-clamp:2;
             -webkit-box-orient:vertical;
             overflow:hidden;
+        }
+
+        #worldMap{
+
+            height:650px;
+
+            border-radius:20px;
+
+        }
+
+        .active-menu{
+            background:#2563eb !important;
+            color:white !important;
+            border-radius:12px;
+            font-weight:600;
         }
     </style>
 </head>

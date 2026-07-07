@@ -3,36 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
+use App\Models\Country;
 
 class CountryController extends Controller
 {
-    public function index()
-    {
-        $response = Http::timeout(30)
-            ->withoutVerifying()
-            ->get('https://restcountries.francocarballar.com/api/v1/all');
+        public function index()
+        {
+            $countries = Country::orderBy('name')->get();
 
-        if (!$response->successful()) {
-            dd('HTTP Error', $response->status(), $response->body());
+            return view(
+                'countries.index',
+                compact('countries')
+            );
         }
-
-        $json = $response->json();
-
-        $countries = collect($json)->map(function ($country) {
-            return [
-                'name' => $country['name']['common'] ?? $country['name'] ?? '-',
-                'code' => $country['cca2'] ?? '-',
-                'currency' => isset($country['currencies'])
-                    ? array_key_first($country['currencies'])
-                    : '-',
-                'region' => $country['region'] ?? '-',
-                'language' => isset($country['languages'])
-                    ? implode(', ', $country['languages'])
-                    : '-',
-                'flag' => $country['flags']['png'] ?? ($country['flag'] ?? null)
-            ];
-        });
-
-        return view('countries.index', compact('countries'));
-    }
 }

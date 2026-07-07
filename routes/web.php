@@ -7,6 +7,9 @@ use App\Http\Controllers\EconomyController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\RiskController;
+use App\Http\Controllers\GlobalController;
+use App\Http\Controllers\CountryIntelligenceController;
+use App\Http\Controllers\PortController;
 
 Route::get('/', function () {
     return view('dashboard.index');
@@ -23,3 +26,11 @@ Route::get('/currency', [CurrencyController::class, 'index']);
 Route::get('/news', [NewsController::class, 'index']);
 
 Route::get('/risk', [RiskController::class, 'index']);
+
+Route::get('/global',[GlobalController::class,'index']);
+
+Route::get('/country/{country}', [CountryIntelligenceController::class, 'show'])
+    ->name('country.show');
+
+Route::get('/ports', [PortController::class,'index'])
+    ->name('ports.index');

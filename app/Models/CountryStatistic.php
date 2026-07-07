@@ -4,30 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Port extends Model
+class CountryStatistic extends Model
 {
+
     protected $fillable = [
 
         'country_id',
-
-        'name',
-
-        'city',
-
-        'latitude',
-
-        'longitude',
-
-        'status',
-
-        'congestion',
-
-        'capacity'
+        'inflation',
+        'population',
+        'export_value',
+        'import_value'
 
     ];
+
 
     public function country()
     {
         return $this->belongsTo(Country::class);
     }
+
 }

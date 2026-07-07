@@ -12,13 +12,33 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ports', function (Blueprint $table) {
+
             $table->id();
-            $table->string('port_name');
-            $table->foreignId('country_id')->nullable()->constrained()->nullOnDelete();
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
-            $table->string('status')->default('normal');
+
+            $table->foreignId('country_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->string('name');
+
+            $table->string('city');
+
+            $table->decimal('latitude',10,6);
+
+            $table->decimal('longitude',10,6);
+
+            $table->enum('status',[
+                'Normal',
+                'Delay',
+                'Congested'
+            ])->default('Normal');
+
+            $table->integer('congestion')->default(0);
+
+            $table->integer('capacity')->nullable();
+
             $table->timestamps();
+
         });
     }
 
