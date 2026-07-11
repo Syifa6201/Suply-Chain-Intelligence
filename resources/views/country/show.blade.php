@@ -2,27 +2,38 @@
 
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid">
 
-    <div>
+    {{-- ================= HEADER ================= --}}
 
-        <h2 class="fw-bold">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            🌍 {{ $country }} Intelligence Dashboard
+        <div class="d-flex align-items-center">
 
-        </h2>
+            <img
+                src="{{ $info['flag'] }}"
+                width="65"
+                class="rounded shadow me-3">
 
-        <small class="text-muted">
+            <div>
 
-            Global Supply Chain Monitoring
+                <h2 class="fw-bold mb-0">
 
-        </small>
+                    {{ $country }}
 
-    </div>
+                </h2>
 
-    <div>
+                <small class="text-muted">
 
-        <span class="badge bg-success fs-6">
+                    Global Supply Chain Intelligence Dashboard
+
+                </small>
+
+            </div>
+
+        </div>
+
+        <span class="badge bg-success px-4 py-2 fs-6">
 
             LIVE
 
@@ -30,148 +41,169 @@
 
     </div>
 
-</div>
 
-<div class="row g-4">
 
-    <div class="col-lg-3">
+    {{-- ================= EXECUTIVE SCORE ================= --}}
 
-        <div class="card card-custom p-4">
+    <div class="row g-4 mb-4">
 
-            <h6>Temperature</h6>
+        <div class="col-lg-3 col-md-6">
 
-            <h2>
-                {{ $weather['current']['temperature_2m'] ?? '-' }}°C
-            </h2>
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <small class="text-muted">
+
+                        Supply Chain Score
+
+                    </small>
+
+                    <h1 class="text-primary mt-3">
+
+                        {{ $supplyScore['overall'] }}/100
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <small class="text-muted">
+
+                        Economic Stability
+
+                    </small>
+
+                    <h1 class="text-success mt-3">
+
+                        {{ $supplyScore['economic'] }}/100
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <small class="text-muted">
+
+                        Logistics
+
+                    </small>
+
+                    <h1 class="text-warning mt-3">
+
+                        {{ $supplyScore['logistics'] }}/100
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <small class="text-muted">
+
+                        Market Opportunity
+
+                    </small>
+
+                    <h1 class="text-info mt-3">
+
+                        {{ $supplyScore['market'] }}/100
+
+                    </h1>
+
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
-    <div class="col-lg-3">
 
-        <div class="card card-custom p-4">
 
-            @php
+    {{-- ================= AI EXECUTIVE SUMMARY ================= --}}
 
-                $gdp = $economy[1][0]['value'] ?? null;
+    <div class="card shadow border-0 mb-4">
 
-            @endphp
+        <div class="card-body">
 
-            <h6>GDP</h6>
+            <h4>
 
-            <h2>
+                🤖 AI Executive Insight
 
-                @if($gdp)
+            </h4>
 
-                    ${{ number_format($gdp/1000000000000,2) }} T
+            <hr>
 
-                @else
+            <p class="mb-0">
 
-                    -
+                <strong>{{ $country }}</strong>
 
-                @endif
+                currently has
 
-            </h2>
+                <strong>{{ strtolower($risk['status']) }}</strong>
 
-        </div>
+                supply chain risk.
 
-    </div>
+                Current inflation is
 
-    <div class="col-lg-3">
+                <strong>
 
-        <div class="card card-custom p-4">
+                    {{ number_format($statistics['inflation'] ?? 0,2) }}%
 
-            <h6>Currency</h6>
+                </strong>
 
-            <h2>
+                with total export value reaching
 
-                {{ $info['currency'] }}
+                <strong>
 
-            </h2>
+                    ${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
 
-        </div>
+                </strong>
 
-    </div>
+                and import
 
-    <div class="col-lg-3">
+                <strong>
 
-        <div class="card card-custom p-4">
+                    ${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B.
 
-            <h6>Risk</h6>
+                </strong>
 
-            @php
+                Based on the latest economic indicators, this country is categorized as
 
-            $temp = $weather['current']['temperature_2m'] ?? 0;
+                <strong>
 
-            $wind = $weather['current']['wind_speed_10m'] ?? 0;
+                    {{ $tradeAnalysis['status'] }}
 
-            $gdp = $economy[1][0]['value'] ?? 0;
+                </strong>
 
-            $score = 0;
-
-            /*
-            Weather
-            */
-
-            if($temp>35)
-            {
-                $score +=40;
-            }
-            elseif($temp>30)
-            {
-                $score +=20;
-            }
-
-            if($wind>40)
-            {
-                $score +=40;
-            }
-            elseif($wind>20)
-            {
-                $score +=20;
-            }
-
-            /*
-            Economy
-            */
-
-            if($gdp>3000000000000)
-            {
-                $score -=20;
-            }
-            elseif($gdp<500000000000)
-            {
-                $score +=20;
-            }
-
-            $score=max(0,min(100,$score));
-
-            $status="LOW";
-            $color="success";
-
-            if($score>=70)
-            {
-                $status="HIGH";
-                $color="danger";
-            }
-            elseif($score>=40)
-            {
-                $status="MEDIUM";
-                $color="warning";
-            }
-
-            @endphp
-
-            <h2 class="text-{{ $color }}">
-                {{ $status }}
-            </h2>
-
-            <p>
-
-            Risk Score
-
-            <b>{{ $score }}/100</b>
+                for international trade.
 
             </p>
 
@@ -179,133 +211,203 @@
 
     </div>
 
-</div>
+    {{-- ================= REALTIME OVERVIEW ================= --}}
 
-<div class="row g-4 mt-1">
+<div class="row g-4 mb-4">
 
-    <div class="col-lg-3">
-        <div class="card card-custom p-4">
-            <h6>📈 Inflation</h6>
+    {{-- Temperature --}}
+    <div class="col-lg-3 col-md-6">
 
-            <h2>
-            {{ number_format($statistics['inflation'] ?? 0,2) }}%
-            </h2>
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    🌡 Temperature
+
+                </small>
+
+                <h2 class="mt-2">
+
+                    {{ $weather['current']['temperature_2m'] ?? '-' }} °C
+
+                </h2>
+
+                <small>
+
+                    Wind
+
+                    {{ $weather['current']['wind_speed_10m'] ?? '-' }}
+
+                    km/h
+
+                </small>
+
+            </div>
+
         </div>
+
     </div>
 
-    <div class="col-lg-3">
-        <div class="card card-custom p-4">
-            <h6>👥 Population</h6>
 
-            <h2>
-            {{ number_format($statistics['population'] ?? 0) }}
-            </h2>
+
+    {{-- GDP --}}
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                @php
+
+                    $gdp = $economy[1][0]['value'] ?? null;
+
+                @endphp
+
+                <small class="text-muted">
+
+                    💰 GDP
+
+                </small>
+
+                <h2 class="mt-2">
+
+                    @if($gdp)
+
+                        ${{ number_format($gdp/1000000000000,2) }} T
+
+                    @else
+
+                        -
+
+                    @endif
+
+                </h2>
+
+                <small>
+
+                    World Bank
+
+                </small>
+
+            </div>
+
         </div>
+
     </div>
 
-    <div class="col-lg-3">
-        <div class="card card-custom p-4">
-            <h6>📦 Export</h6>
 
-            <h2>
-            ${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
-            </h2>
+
+    {{-- Currency --}}
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    💱 Currency
+
+                </small>
+
+                <h2 class="mt-2">
+
+                    {{ $currency['currency'] ?? '-' }}
+
+                </h2>
+
+                <div>
+
+                    1 USD =
+
+                    <b>
+
+                        {{ number_format($currency['rate'] ?? 0,2) }}
+
+                        {{ $currency['currency'] ?? '' }}
+
+                    </b>
+
+                </div>
+
+                <span class="badge bg-{{ $currency['color'] ?? 'secondary' }} mt-2">
+
+                    {{ $currency['status'] ?? 'Unknown' }}
+
+                </span>
+
+            </div>
+
         </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="card card-custom p-4">
-            <h6>📥 Import</h6>
-
-            <h2>
-            ${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B
-            </h2>
-        </div>
-    </div>
-
-</div>
-
-<div class="card card-custom p-4 mt-4">
-
-    <div class="d-flex justify-content-between">
-
-        <h4>
-            🗺 Country Map
-        </h4>
-
-        <span class="badge bg-primary">
-            LIVE
-        </span>
 
     </div>
 
-    <hr>
 
-    <div id="countryMap"
-         style="height:500px;border-radius:20px;">
-    </div>
 
-</div>
+    {{-- Risk --}}
+    <div class="col-lg-3 col-md-6">
 
-<div class="row mt-4">
+        <div class="card shadow border-0 h-100">
 
-    <div class="col-lg-6">
+            <div class="card-body">
 
-        <div class="card card-custom p-4 h-100">
+                <small class="text-muted">
 
-            <h4>
-                📰 Latest Country News
-            </h4>
+                    ⚠ AI Risk Analysis
 
-            <hr>
+                </small>
 
-            @forelse(($news['articles'] ?? []) as $article)
+                <h2 class="text-{{ $risk['color'] }} mt-2">
 
-                <div class="mb-3">
+                    {{ $risk['status'] }}
 
-                    <a href="{{ $article['url'] }}"
-                       target="_blank"
-                       class="fw-bold">
+                </h2>
 
-                        {{ $article['title'] }}
+                <div>
 
-                    </a>
+                    Score
 
-                    <br>
+                    <b>
 
-                    <small class="text-muted">
+                        {{ $risk['score'] }}/100
 
-                        {{ $article['source']['name'] ?? '' }}
-
-                    </small>
+                    </b>
 
                 </div>
 
                 <hr>
 
-            @empty
+                <small class="text-muted">
 
-                <p>No news available.</p>
+                    Risk Factors
 
-            @endforelse
+                </small>
 
-        </div>
+                <ul class="small mb-0 mt-2">
 
-    </div>
+                    @forelse(($risk['reasons'] ?? []) as $reason)
 
-    <div class="col-lg-6">
+                        <li>
 
-        <div class="card card-custom p-4 h-100">
+                            {{ $reason }}
 
-            <h4>
+                        </li>
 
-                📈 Trade Trend
+                    @empty
 
-            </h4>
+                        <li>
 
-            <hr>
+                            No significant risk detected
 
-            <canvas id="tradeChart"></canvas>
+                        </li>
+
+                    @endforelse
+
+                </ul>
+
+            </div>
 
         </div>
 
@@ -313,216 +415,329 @@
 
 </div>
 
-<div class="row mt-4">
-
-    <div class="col-lg-6">
-
-        <div class="card card-custom p-4 h-100">
-
-            <h4>
-                <i class="bi bi-robot"></i>
-                AI Trade Recommendation
-            </h4>
-
-            <hr>
 
 
-            @php
+{{-- ================= COUNTRY STATISTICS ================= --}}
 
-                $recommendation = "Suitable for Export";
+<div class="row g-4 mb-4">
 
-                $reason = [];
+    <div class="col-lg-3 col-md-6">
 
-                if($score <= 30)
-                {
-                    $reason[] = "Low Risk Condition";
-                }
+        <div class="card shadow border-0">
 
-                if($gdp > 1000000000000)
-                {
-                    $reason[] = "Strong Economic Performance";
-                }
+            <div class="card-body text-center">
 
-                if($temp < 35)
-                {
-                    $reason[] = "Stable Weather";
-                }
+                <small class="text-muted">
 
+                    📈 Inflation
 
-            @endphp
+                </small>
 
+                <h3 class="mt-2">
 
-            <h3 class="text-success">
+                    {{ number_format($statistics['inflation'] ?? 0,2) }}%
 
-                {{ $recommendation }}
+                </h3>
 
-            </h3>
-
-
-            <ul class="mt-3">
-
-                @foreach($reason as $item)
-
-                    <li>
-                        {{ $item }}
-                    </li>
-
-                @endforeach
-
-
-            </ul>
-
+            </div>
 
         </div>
 
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-3 col-md-6">
 
+        <div class="card shadow border-0">
 
-        <div class="card card-custom p-4 h-100">
+            <div class="card-body text-center">
 
+                <small class="text-muted">
 
-            <h4>
+                    👥 Population
 
-                <i class="bi bi-box-seam"></i>
+                </small>
 
-                Trade Potential
+                <h3 class="mt-2">
 
-            </h4>
+                    {{ number_format($statistics['population'] ?? 0) }}
 
-
-            <hr>
-
-
-            <h6>
-                Recommended Export Sector
-            </h6>
-
-
-            <div class="mt-3">
-
-
-                <span class="badge bg-primary p-2 me-2">
-
-                    Technology
-
-                </span>
-
-
-                <span class="badge bg-primary p-2 me-2">
-
-                    Machinery
-
-                </span>
-
-
-                <span class="badge bg-primary p-2">
-
-                    Industrial Goods
-
-                </span>
-
+                </h3>
 
             </div>
-
-
-            <br>
-
-
-            <h6>
-
-                Import Opportunity
-
-            </h6>
-
-
-            <div>
-
-                <span class="badge bg-warning text-dark p-2">
-
-                    Raw Materials
-
-                </span>
-
-            </div>
-
 
         </div>
 
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <small class="text-muted">
+
+                    📦 Export
+
+                </small>
+
+                <h3 class="mt-2">
+
+                    ${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
+
+                </h3>
+
+            </div>
+
+        </div>
 
     </div>
 
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <small class="text-muted">
+
+                    📥 Import
+
+                </small>
+
+                <h3 class="mt-2">
+
+                    ${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
-<div class="row mt-4">
+{{-- ================= MAP ================= --}}
+
+<div class="card shadow border-0 mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+
+            <h4>
+
+                🗺 Country Location
+
+            </h4>
+
+            <span class="badge bg-primary">
+
+                LIVE MAP
+
+            </span>
+
+        </div>
+
+        <hr>
+
+        <div
+            id="countryMap"
+            style="height:500px;border-radius:15px;">
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ================= NEWS & TRADE TREND ================= --}}
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <h4>
+
+                    📰 Latest News
+
+                </h4>
+
+                <hr>
+
+                @forelse(($news['articles'] ?? []) as $article)
+
+                    <div class="mb-4">
+
+                        <a
+                            href="{{ $article['url'] }}"
+                            target="_blank"
+                            class="fw-bold text-decoration-none">
+
+                            {{ $article['title'] }}
+
+                        </a>
+
+                        <br>
+
+                        <small class="text-muted">
+
+                            {{ $article['source']['name'] ?? '-' }}
+
+                            •
+
+                            {{ $article['publishedAt'] ?? '' }}
+
+                        </small>
+
+                    </div>
+
+                    <hr>
+
+                @empty
+
+                    <div class="text-center text-muted py-5">
+
+                        No news available
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <h4>
+
+                    📈 Trade Trend
+
+                </h4>
+
+                <hr>
+
+                <div style="height:380px">
+
+                    <canvas id="tradeChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ================= AI RECOMMENDATION ================= --}}
+
+<div class="row g-4 mb-4">
 
 <div class="col-lg-6">
 
-<div class="card card-custom p-4">
+<div class="card shadow border-0 h-100">
+
+<div class="card-body">
 
 <h4>
 
-<i class="bi bi-geo-alt-fill"></i>
-
-Major Ports
+🤖 AI Recommendation
 
 </h4>
 
 <hr>
 
-@foreach($ports as $port)
+<h3 class="text-{{ $recommendation['color'] }}">
 
-<div class="d-flex justify-content-between border-bottom py-2">
+{{ $recommendation['title'] }}
 
-<div>
+</h3>
 
-⚓ {{ $port }}
+<ul class="mt-3">
+
+@forelse(($recommendation['reasons'] ?? []) as $reason)
+
+<li>
+
+{{ $reason }}
+
+</li>
+
+@empty
+
+<li>
+
+No recommendation.
+
+</li>
+
+@endforelse
+
+</ul>
 
 </div>
 
-<span class="badge bg-success">
-
-Active
-
-</span>
-
-</div>
-
-@endforeach
-
 </div>
 
 </div>
+
+
 
 <div class="col-lg-6">
 
-<div class="card card-custom p-4">
+<div class="card shadow border-0 h-100">
+
+<div class="card-body">
 
 <h4>
 
-<i class="bi bi-speedometer2"></i>
-
-Port Performance
+📦 Trade Intelligence
 
 </h4>
 
 <hr>
 
-<table class="table">
+<div class="text-center">
+
+<h2 class="text-{{ $tradeAnalysis['color'] }}">
+
+{{ $tradeAnalysis['status'] }}
+
+</h2>
+
+</div>
+
+<table class="table mt-4">
 
 <tr>
 
-<td>Status</td>
+<th>Export</th>
 
 <td>
 
-<span class="badge bg-success">
+${{ number_format(($tradeAnalysis['export'] ?? 0)/1000000000,2) }}
 
-Normal
-
-</span>
+B
 
 </td>
 
@@ -530,11 +745,13 @@ Normal
 
 <tr>
 
-<td>Congestion</td>
+<th>Import</th>
 
 <td>
 
-Low
+${{ number_format(($tradeAnalysis['import'] ?? 0)/1000000000,2) }}
+
+B
 
 </td>
 
@@ -542,11 +759,13 @@ Low
 
 <tr>
 
-<td>Container Capacity</td>
+<th>Trade Balance</th>
 
 <td>
 
-9.5 Million TEU
+${{ number_format(($tradeAnalysis['balance'] ?? 0)/1000000000,2) }}
+
+B
 
 </td>
 
@@ -554,11 +773,11 @@ Low
 
 <tr>
 
-<td>Efficiency</td>
+<th>Recommendation</th>
 
 <td>
 
-★★★★☆
+{{ $tradeAnalysis['status'] }}
 
 </td>
 
@@ -572,126 +791,300 @@ Low
 
 </div>
 
+</div>
+
+{{-- ================= PORT INTELLIGENCE ================= --}}
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <h4>
+
+                    ⚓ Major Ports
+
+                </h4>
+
+                <hr>
+
+                @forelse($ports as $port)
+
+                    <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+
+                        <div>
+
+                            <h6 class="mb-1">
+
+                                {{ $port->name }}
+
+                            </h6>
+
+                            <small class="text-muted">
+
+                                {{ $port->city }}
+
+                            </small>
+
+                        </div>
+
+                        <div>
+
+                            @php
+
+                                $status = $port->current_status ?? 'Normal';
+
+                            @endphp
+
+                            @if($status=="Normal")
+
+                                <span class="badge bg-success">
+
+                                    Normal
+
+                                </span>
+
+                            @elseif($status=="Delay")
+
+                                <span class="badge bg-warning">
+
+                                    Delay
+
+                                </span>
+
+                            @else
+
+                                <span class="badge bg-danger">
+
+                                    Congested
+
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="text-center py-5 text-muted">
+
+                        No port information available.
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-6">
+
+        <div class="card shadow border-0 h-100">
+
+            <div class="card-body">
+
+                <h4>
+
+                    🚢 Port Performance
+
+                </h4>
+
+                <hr>
+
+                <table class="table">
+
+                    <tr>
+
+                        <th>Status</th>
+
+                        <td>
+
+                            {{ $portSummary['status'] ?? '-' }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Congestion</th>
+
+                        <td>
+
+                            {{ $portSummary['congestion'] ?? 0 }} %
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Total Capacity</th>
+
+                        <td>
+
+                            {{ number_format($portSummary['capacity'] ?? 0) }}
+
+                            TEU
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded",function(){
 
+    const map=L.map("countryMap").setView([
 
-    var map = L.map('countryMap')
-        .setView(
-            [
-                {{ $info['lat'] }},
-                {{ $info['lon'] }}
-            ],
-            5
-        );
+        {{ $info['lat'] }},
 
+        {{ $info['lon'] }}
+
+    ],5);
 
     L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
         {
+
             maxZoom:19
+
         }
+
     ).addTo(map);
 
+    L.marker([
 
+        {{ $info['lat'] }},
 
-    L.marker(
-        [
-            {{ $info['lat'] }},
-            {{ $info['lon'] }}
-        ]
-    )
+        {{ $info['lon'] }}
+
+    ])
+
     .addTo(map)
-    .bindPopup(
-        `
-        <b>{{ $country }}</b>
-        <br>
-        Capital Location
-        `
-    )
-    .openPopup();
 
+    .bindPopup(
+
+        "<b>{{ $country }}</b><br>{{ $info['capital'] }}"
+
+    )
+
+    .openPopup();
 
 });
 
 </script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 
 <script>
 
-new Chart(
+document.addEventListener("DOMContentLoaded",function(){
 
-document.getElementById('tradeChart'),
+    const chart=document.getElementById("tradeChart");
 
-{
+    if(!chart) return;
 
-type:'line',
+    new Chart(chart,{
 
-data:{
+        type:"line",
 
+        data:{
 
-labels:[
+            labels:@json($tradeTrend['export']['labels'] ?? []),
 
-'2020',
-'2021',
-'2022',
-'2023',
-'2024',
-'2025'
+            datasets:[
 
-],
+                {
 
+                    label:"Export",
 
-datasets:[
+                    data:@json($tradeTrend['export']['values'] ?? []),
 
+                    borderColor:"#0d6efd",
 
-{
+                    backgroundColor:"rgba(13,110,253,.15)",
 
-label:'Export',
+                    fill:true,
 
-data:[
-{{ ($statistics['export'] ?? 0)/1000000000*0.70 }},
-{{ ($statistics['export'] ?? 0)/1000000000*0.75 }},
-{{ ($statistics['export'] ?? 0)/1000000000*0.82 }},
-{{ ($statistics['export'] ?? 0)/1000000000*0.90 }},
-{{ ($statistics['export'] ?? 0)/1000000000*0.95 }},
-{{ ($statistics['export'] ?? 0)/1000000000 }}
-]
+                    tension:.4
 
-},
+                },
 
+                {
 
-{
+                    label:"Import",
 
-label:'Import',
+                    data:@json($tradeTrend['import']['values'] ?? []),
 
-data:[
-{{ ($statistics['import'] ?? 0)/1000000000*0.70 }},
-{{ ($statistics['import'] ?? 0)/1000000000*0.75 }},
-{{ ($statistics['import'] ?? 0)/1000000000*0.82 }},
-{{ ($statistics['import'] ?? 0)/1000000000*0.90 }},
-{{ ($statistics['import'] ?? 0)/1000000000*0.95 }},
-{{ ($statistics['import'] ?? 0)/1000000000 }}
-]
+                    borderColor:"#dc3545",
 
-}
+                    backgroundColor:"rgba(220,53,69,.15)",
 
+                    fill:true,
 
-]
+                    tension:.4
 
+                }
 
-}
+            ]
 
+        },
 
-}
+        options:{
 
-);
+            responsive:true,
 
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+
+                    position:"top"
+
+                }
+
+            },
+
+            interaction:{
+
+                mode:"index",
+
+                intersect:false
+
+            }
+
+        }
+
+    });
+
+});
 
 </script>
+
+</div>
 
 @endsection

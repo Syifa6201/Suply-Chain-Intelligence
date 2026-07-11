@@ -2,54 +2,21 @@
 
 namespace App\Services;
 
+use App\Models\Port;
+use App\Models\Country;
+
 class PortService
 {
-    public function getPorts($country)
+    public function getPorts($countryName)
     {
+        $country = Country::where('name', $countryName)->first();
 
-        $ports=[
+        if (!$country) {
+            return collect();
+        }
 
-            "Indonesia"=>[
-                "Tanjung Priok",
-                "Tanjung Perak",
-                "Belawan",
-                "Makassar",
-                "Batam"
-            ],
-
-            "United States"=>[
-                "Los Angeles",
-                "Long Beach",
-                "New York",
-                "Houston",
-                "Savannah"
-            ],
-
-            "China"=>[
-                "Shanghai",
-                "Shenzhen",
-                "Qingdao",
-                "Ningbo",
-                "Guangzhou"
-            ],
-
-            "Singapore"=>[
-                "Port of Singapore"
-            ],
-
-            "Germany"=>[
-                "Hamburg",
-                "Bremerhaven"
-            ],
-
-            "Russia"=>[
-                "Novorossiysk",
-                "Saint Petersburg"
-            ]
-
-        ];
-
-        return $ports[$country] ?? [];
-
+        return Port::where('country_id', $country->id)
+            ->orderBy('name')
+            ->get();
     }
 }

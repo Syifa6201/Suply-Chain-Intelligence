@@ -3,78 +3,278 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
+use App\Models\Country;
 
 class NewsController extends Controller
 {
     public function index()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Selected Country
+        |--------------------------------------------------------------------------
+        */
+
+        $selectedCountry = request('country', 'Indonesia');
+
+        $countries = Country::orderBy('name')->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | News API
+        |--------------------------------------------------------------------------
+        */
+
         $apiKey = env('NEWS_API_KEY');
 
-        $response = Http::get('https://newsapi.org/v2/everything', [
-            'q' => 'economy OR logistics OR supply chain OR geopolitics',
-            'language' => 'en',
-            'sortBy' => 'publishedAt',
-            'pageSize' => 10,
-            'apiKey' => $apiKey
-        ]);
+        $articles = [];
 
-        $data = $response->json();
+        try {
 
-        $articles = $data['articles'] ?? [];
+            $response = Http::timeout(20)->get(
 
-        $positiveWords = ['growth', 'improve', 'profit', 'stable', 'increase', 'recovery'];
-        $negativeWords = ['war', 'crisis', 'delay', 'storm', 'inflation', 'conflict'];
+                'https://newsapi.org/v2/everything',
+
+                [
+
+                    'q' => $selectedCountry .
+                        ' economy OR logistics OR supply chain OR export OR import OR port',
+
+                    'language' => 'en',
+
+                    'sortBy' => 'publishedAt',
+
+                    'pageSize' => 15,
+
+                    'apiKey' => $apiKey
+
+                ]
+
+            );
+
+            if ($response->successful()) {
+
+                $data = $response->json();
+
+                $articles = $data['articles'] ?? [];
+
+            }
+
+        } catch (\Exception $e) {
+
+            $articles = [];
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sentiment Dictionary
+        |--------------------------------------------------------------------------
+        */
+
+        $positiveWords = [
+
+            'growth',
+            'improve',
+            'profit',
+            'stable',
+            'increase',
+            'recovery',
+            'expansion',
+            'investment',
+            'agreement',
+            'success',
+            'development'
+
+        ];
+
+        $negativeWords = [
+
+            'war',
+            'crisis',
+            'delay',
+            'storm',
+            'inflation',
+            'conflict',
+            'earthquake',
+            'flood',
+            'strike',
+            'sanction',
+            'closure',
+            'recession'
+
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sentiment Analysis
+        |--------------------------------------------------------------------------
+        */
 
         $results = [];
+
         $positiveCount = 0;
         $negativeCount = 0;
         $neutralCount = 0;
 
         foreach ($articles as $article) {
+
             $title = $article['title'] ?? '';
-            $text = strtolower($title);
+
+            $description = $article['description'] ?? '';
+
+            $text = strtolower($title . ' ' . $description);
 
             $positiveScore = 0;
+
             $negativeScore = 0;
 
             foreach ($positiveWords as $word) {
-                if (str_contains($text, $word)) $positiveScore++;
+
+                if (str_contains($text, $word)) {
+
+                    $positiveScore++;
+
+                }
+
             }
 
             foreach ($negativeWords as $word) {
-                if (str_contains($text, $word)) $negativeScore++;
+
+                if (str_contains($text, $word)) {
+
+                    $negativeScore++;
+
+                }
+
             }
 
             if ($positiveScore > $negativeScore) {
-                $sentiment = "Positive";
+
+                $sentiment = 'Positive';
+
+                $badge = 'success';
+
                 $positiveCount++;
-            } elseif ($negativeScore > $positiveScore) {
-                $sentiment = "Negative";
+
+            }
+
+            elseif ($negativeScore > $positiveScore) {
+
+                $sentiment = 'Negative';
+
+                $badge = 'danger';
+
                 $negativeCount++;
-            } else {
-                $sentiment = "Neutral";
+
+            }
+
+            else {
+
+                $sentiment = 'Neutral';
+
+                $badge = 'warning';
+
                 $neutralCount++;
+
             }
 
             $results[] = [
+
                 'title' => $title,
+
+                'description' => $description,
+
                 'source' => $article['source']['name'] ?? '-',
+
                 'date' => $article['publishedAt'] ?? '-',
-                'sentiment' => $sentiment
+
+                'url' => $article['url'] ?? '#',
+
+                'image' => $article['urlToImage'] ?? null,
+
+                'sentiment' => $sentiment,
+
+                'badge' => $badge
+
             ];
+
         }
 
-        $total = max(count($results), 1);
+        /*
+        |--------------------------------------------------------------------------
+        | Summary
+        |--------------------------------------------------------------------------
+        */
 
-        $positivePercent = round(($positiveCount / $total) * 100);
-        $negativePercent = round(($negativeCount / $total) * 100);
-        $neutralPercent = round(($neutralCount / $total) * 100);
+        $totalNews = count($results);
 
-        return view('news.index', compact(
-            'results',
-            'positivePercent',
-            'negativePercent',
-            'neutralPercent'
-        ));
+        $divider = max($totalNews, 1);
+
+        $positivePercent = round(($positiveCount / $divider) * 100);
+
+        $negativePercent = round(($negativeCount / $divider) * 100);
+
+        $neutralPercent = round(($neutralCount / $divider) * 100);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Breaking News
+        |--------------------------------------------------------------------------
+        */
+
+        $breakingNews = $results[0] ?? null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Overall Sentiment
+        |--------------------------------------------------------------------------
+        */
+
+        if ($positivePercent >= $negativePercent && $positivePercent >= $neutralPercent) {
+
+            $overallSentiment = 'Positive';
+
+        }
+
+        elseif ($negativePercent >= $positivePercent && $negativePercent >= $neutralPercent) {
+
+            $overallSentiment = 'Negative';
+
+        }
+
+        else {
+
+            $overallSentiment = 'Neutral';
+
+        }
+
+        return view(
+
+            'news.index',
+
+            compact(
+
+                'countries',
+
+                'selectedCountry',
+
+                'results',
+
+                'totalNews',
+
+                'positivePercent',
+
+                'negativePercent',
+
+                'neutralPercent',
+
+                'breakingNews',
+
+                'overallSentiment'
+
+            )
+
+        );
     }
 }

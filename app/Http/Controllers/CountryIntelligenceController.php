@@ -2,90 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Services\WeatherService;
 use App\Services\EconomyService;
 use App\Services\CurrencyService;
 use App\Services\NewsService;
-use App\Services\PortService;
 use App\Services\CountryStatisticService;
+use App\Services\RiskEngineService;
+use App\Services\RecommendationService;
+use App\Services\PortStatusService;
+use App\Services\WorldBankHistoryService;
+use App\Services\TradePotentialService;
+use App\Services\TradeAnalysisService;
+use App\Services\SupplyChainScoreService;
 
 class CountryIntelligenceController extends Controller
 {
     public function show(
-
         $country,
-
         WeatherService $weatherService,
-
         EconomyService $economyService,
-
         CurrencyService $currencyService,
-
         NewsService $newsService,
-
-        PortService $portService,
-
         CountryStatisticService $statisticService,
-
+        RiskEngineService $riskEngine,
+        RecommendationService $recommendationService,
+        PortStatusService $portStatusService,
+        WorldBankHistoryService $historyService,
+        TradePotentialService $tradePotentialService,
+        TradeAnalysisService $tradeAnalysisService,
+        SupplyChainScoreService $scoreService,
     ) {
 
-        /**
-         * Mapping sementara.
-         * Nanti kita pindahkan ke database countries.
-         */
-        $locations = [
+        $country = urldecode(trim($country));
 
-            'Indonesia'=>[
-                'lat'=>-6.2,
-                'lon'=>106.8,
-                'code'=>'IDN',
-                'currency'=>'IDR'
-            ],
+        $countryData = Country::with('ports')
+            ->where('code', strtoupper($country))
+            ->firstOrFail();
 
-            'China'=>[
-                'lat'=>39.9,
-                'lon'=>116.4,
-                'code'=>'CHN',
-                'currency'=>'CNY'
-            ],
+        $info = [
 
-            'United States'=>[
-                'lat'=>38.9,
-                'lon'=>-77.0,
-                'code'=>'USA',
-                'currency'=>'USD'
-            ],
-
-            'Germany'=>[
-                'lat'=>52.5,
-                'lon'=>13.4,
-                'code'=>'DEU',
-                'currency'=>'EUR'
-            ],
-
-            'Russia'=>[
-                'lat'=>55.7,
-                'lon'=>37.6,
-                'code'=>'RUS',
-                'currency'=>'RUB'
-            ],
-
-            'Singapore'=>[
-                'lat'=>1.29,
-                'lon'=>103.85,
-                'code'=>'SGP',
-                'currency'=>'SGD'
-            ]
+            'lat'       => $countryData->latitude,
+            'lon'       => $countryData->longitude,
+            'code'      => $countryData->iso3,
+            'currency'  => $countryData->currency,
+            'capital'   => $countryData->capital,
+            'region'    => $countryData->region,
+            'language'  => $countryData->language,
+            'flag'      => $countryData->flag,
 
         ];
-
-        if(!isset($locations[$country])){
-
-            abort(404);
-
-        }
-
-        $info = $locations[$country];
 
         $weather = $weatherService->getCurrentWeather(
             $info['lat'],
@@ -96,40 +62,99 @@ class CountryIntelligenceController extends Controller
             $info['code']
         );
 
-        $currency = $currencyService->getRate();
+        $currency = $currencyService->getRate(
+            $info['currency']
+        );
 
         $news = $newsService->getCountryNews($country);
 
-        $ports = $portService->getPorts($country);
-
         $statistics = $statisticService->getStatistics(
-
             $info['code']
-
         );
 
-        return view(
-        'country.show',
-        compact(
-
-        'country',
-
-        'weather',
-
-        'economy',
-
-        'currency',
-
-        'news',
-
-        'info',
-
-        'ports',
-
-        'statistics'
-
-        )
+        $tradeTrend = $historyService->getTradeHistory(
+            $info['code']
         );
 
+        $risk = $riskEngine->calculate(
+            $weather,
+            $statistics,
+            $news
+        );
+
+        $recommendation = $recommendationService->generate(
+            $risk,
+            $weather,
+            $news
+        );
+
+        $tradePotential = $tradePotentialService->analyze(
+            $statistics,
+            $risk,
+            $news
+        );
+
+        $tradeAnalysis = $tradeAnalysisService->analyze(
+            $statistics
+        );
+
+        $supplyScore = $scoreService->calculate(
+            $statistics,
+            $risk,
+            $tradeAnalysis
+        );
+        $ports = $countryData->ports;
+
+        foreach ($ports as $port) {
+
+            $summary = $portStatusService->calculate(
+                $port,
+                $weather,
+                $risk,
+                $news
+            );
+
+            $port->current_status = $summary['status'];
+            $port->current_congestion = $summary['congestion'];
+        }
+
+        $portSummary = [
+
+            'status' => '-',
+            'congestion' => 0,
+            'capacity' => 0
+
+        ];
+
+        if ($ports->count()) {
+
+            $portSummary = [
+
+                'status' => $ports->first()->current_status,
+                'congestion' => round($ports->avg('current_congestion')),
+                'capacity' => $ports->sum('capacity')
+
+            ];
+        }
+
+        return view('country.show', compact(
+
+            'country',
+            'info',
+            'weather',
+            'economy',
+            'currency',
+            'statistics',
+            'tradeTrend',
+            'risk',
+            'recommendation',
+            'news',
+            'ports',
+            'portSummary',
+            'tradePotential',
+            'tradeAnalysis',
+            'supplyScore',
+
+        ));
     }
 }
