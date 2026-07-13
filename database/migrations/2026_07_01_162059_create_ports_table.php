@@ -10,37 +10,89 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('ports', function (Blueprint $table) {
+{
+    Schema::create('ports', function (Blueprint $table) {
 
-            $table->id();
+        $table->id();
 
-            $table->foreignId('country_id')
-                ->constrained()
-                ->cascadeOnDelete();
 
-            $table->string('name');
+        // Nama pelabuhan
+        $table->string('name');
 
-            $table->string('city');
 
-            $table->decimal('latitude',10,6);
+        // Relasi negara
+        $table->foreignId('country_id')
+              ->constrained()
+              ->cascadeOnDelete();
 
-            $table->decimal('longitude',10,6);
 
-            $table->enum('status',[
+
+        // Koordinat asli pelabuhan
+        $table->decimal(
+            'latitude',
+            10,
+            7
+        );
+
+
+        $table->decimal(
+            'longitude',
+            10,
+            7
+        );
+
+
+
+        // Informasi logistik
+
+        $table->string('terminal')
+              ->nullable();
+
+
+        $table->string('type')
+              ->default('Container Port');
+
+
+
+        // Kapasitas TEU per tahun
+
+        $table->bigInteger('capacity')
+              ->default(0);
+
+
+
+        // tingkat kepadatan %
+
+        $table->integer('congestion')
+              ->default(0);
+
+
+
+        // status operasi
+
+        $table->enum(
+            'status',
+            [
                 'Normal',
                 'Delay',
-                'Congested'
-            ])->default('Normal');
+                'Critical'
+            ]
+        )
+        ->default('Normal');
 
-            $table->integer('congestion')->default(0);
 
-            $table->integer('capacity')->nullable();
 
-            $table->timestamps();
+        // AI risk score
 
-        });
-    }
+        $table->integer('risk_score')
+              ->default(0);
+
+
+
+        $table->timestamps();
+
+    });
+}
 
     /**
      * Reverse the migrations.

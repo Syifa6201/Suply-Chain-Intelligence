@@ -1,96 +1,346 @@
-<h3 class="text-center mb-4">
-    <i class="bi bi-globe2"></i>
-    SupplyChain AI
+<div class="sidebar-wrapper">
+
+
+<div class="sidebar-brand">
+
+
+<h3>
+<i class="bi bi-globe2"></i>
+
+SupplyChain <span>AI</span>
+
 </h3>
 
+
+<p>
+Global Trade Intelligence Platform
+</p>
+
+
+</div>
+
+
+
+
+
 <!-- MAIN -->
-<p class="text-uppercase small text-secondary mt-3 mb-2">MAIN</p>
 
-<a href="/global" class="{{ request()->is('global') ? 'active-menu' : '' }}">
-    <i class="bi bi-globe-americas"></i>
-    Global Monitor
+<div class="sidebar-section">
+
+<div class="sidebar-title">
+MAIN
+</div>
+
+
+
+<a href="/global"
+class="{{ request()->is('global') ? 'active-menu':'' }}">
+
+<i class="bi bi-globe-americas"></i>
+
+Global Monitor
+
 </a>
 
-<a href="/" class="{{ request()->is('/') ? 'active-menu' : '' }}">
-    <i class="bi bi-speedometer2"></i>
-    Dashboard
+
+
+<a href="/"
+class="{{ request()->is('/') ? 'active-menu':'' }}">
+
+<i class="bi bi-speedometer2"></i>
+
+Dashboard
+
 </a>
 
-<hr class="text-secondary">
+
+</div>
+
+
+
+
+
+
 
 <!-- INTELLIGENCE -->
-<p class="text-uppercase small text-secondary mb-2">INTELLIGENCE</p>
 
-<a href="/countries" class="{{ request()->is('countries') ? 'active-menu' : '' }}">
-    <i class="bi bi-flag"></i>
-    Countries
+
+<div class="sidebar-section">
+
+
+<div class="sidebar-title">
+INTELLIGENCE
+</div>
+
+
+
+<a href="/countries"
+class="{{ request()->is('countries')?'active-menu':'' }}">
+
+
+<i class="bi bi-flag"></i>
+
+Countries
+
 </a>
 
-<a href="/weather" class="{{ request()->is('weather') ? 'active-menu' : '' }}">
-    <i class="bi bi-cloud-sun"></i>
-    Weather
+
+
+
+<a href="/weather"
+class="{{ request()->is('weather')?'active-menu':'' }}">
+
+
+<i class="bi bi-cloud-sun"></i>
+
+Weather Intelligence
+
 </a>
 
-<a href="/economy" class="{{ request()->is('economy') ? 'active-menu' : '' }}">
-    <i class="bi bi-graph-up"></i>
-    Economy
+
+
+
+
+<a href="/economy"
+class="{{ request()->is('economy')?'active-menu':'' }}">
+
+
+<i class="bi bi-graph-up-arrow"></i>
+
+Economic Monitor
+
 </a>
 
-<a href="/currency" class="{{ request()->is('currency') ? 'active-menu' : '' }}">
-    <i class="bi bi-currency-exchange"></i>
-    Currency
+
+
+
+
+<a href="/currency"
+class="{{ request()->is('currency')?'active-menu':'' }}">
+
+
+<i class="bi bi-currency-exchange"></i>
+
+Currency Analysis
+
 </a>
 
-<a href="/news" class="{{ request()->is('news') ? 'active-menu' : '' }}">
-    <i class="bi bi-newspaper"></i>
-    News Intelligence
+
+
+
+
+<a href="/news"
+class="{{ request()->is('news')?'active-menu':'' }}">
+
+
+<i class="bi bi-newspaper"></i>
+
+News Intelligence
+
 </a>
 
-<a href="/risk" class="{{ request()->is('risk') ? 'active-menu' : '' }}">
-    <i class="bi bi-shield-exclamation"></i>
-    AI Risk Analysis
+
+
+
+
+<a href="/risk"
+class="{{ request()->is('risk')?'active-menu':'' }}">
+
+
+<i class="bi bi-shield-exclamation"></i>
+
+Country Risk
+
 </a>
 
-<hr class="text-secondary">
+
+
+
+
+
+<a href="{{route('trade-risk.index')}}"
+class="{{ request()->is('trade-risk')?'active-menu':'' }}">
+
+
+<i class="bi bi-cpu"></i>
+
+AI Trade Risk
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+
 
 <!-- MONITORING -->
-<p class="text-uppercase small text-secondary mb-2">MONITORING</p>
 
-<a href="{{ route('ports.index') }}" 
-   class="{{ request()->is('ports') ? 'active-menu' : '' }}">
 
-    <i class="bi bi-geo-alt"></i>
+<div class="sidebar-section">
 
-    Ports
+
+<div class="sidebar-title">
+MONITORING
+</div>
+
+
+
+
+
+<a href="{{route('ports.index')}}"
+class="{{request()->is('ports')?'active-menu':''}}">
+
+
+<i class="bi bi-geo-alt"></i>
+
+
+Ports Intelligence
 
 </a>
 
-<a href="#" onclick="alert('Coming Soon')">
-    <i class="bi bi-truck"></i>
-    Live Vessels
+
+
+
+
+
+<a href="/live-vessels"
+class="{{request()->is('live-vessels')?'active-menu':''}}">
+
+
+<i class="bi bi-truck"></i>
+
+
+Live Vessel Tracking
+
+
 </a>
 
-<a href="#" onclick="alert('Coming Soon')">
-    <i class="bi bi-box-seam"></i>
-    Trade Intelligence
+
+
+
+
+
+<a href="{{route('trade.index')}}"
+class="{{request()->is('trade-intelligence')?'active-menu':''}}">
+
+
+<i class="bi bi-box-seam"></i>
+
+
+Trade Intelligence
+
+
 </a>
 
-<a href="#" onclick="alert('Coming Soon')">
-    <i class="bi bi-bookmark-star"></i>
-    Watchlist
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- AI ENGINE -->
+
+
+<div class="sidebar-section">
+
+
+<div class="sidebar-title">
+
+AI ENGINE
+
+</div>
+
+
+
+
+<a href="#"
+onclick="alert('Recommendation Engine Coming Soon')">
+
+
+<i class="bi bi-lightning-charge"></i>
+
+
+Recommendation Engine
+
+
 </a>
 
-<hr class="text-secondary">
+
+
+<a href="#"
+onclick="alert('Prediction Engine Coming Soon')">
+
+
+<i class="bi bi-stars"></i>
+
+
+Trade Prediction
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
 
 <!-- SYSTEM -->
-<p class="text-uppercase small text-secondary mb-2">SYSTEM</p>
 
-<a href="#" onclick="alert('Coming Soon')">
-    <i class="bi bi-person-circle"></i>
-    Profile
+
+<div class="sidebar-section">
+
+
+<div class="sidebar-title">
+
+SYSTEM
+
+</div>
+
+
+
+
+<a href="{{route('profile.index')}}"
+class="{{request()->is('profile')?'active-menu':''}}">
+
+<i class="bi bi-person-circle"></i>
+
+Profile
+
 </a>
 
-<a href="#" onclick="alert('Coming Soon')">
-    <i class="bi bi-gear"></i>
-    Settings
+
+
+
+<a href="#">
+
+<i class="bi bi-gear"></i>
+
+Settings
+
 </a>
+
+
+
+</div>
+
+
+
+
+</div>

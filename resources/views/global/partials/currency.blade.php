@@ -1,52 +1,147 @@
 <div class="col-lg-4">
 
-    <div class="card card-custom p-4 h-100">
+    <div class="card card-custom shadow-sm border-0 h-100">
 
-        <h5>
+        <div class="card-header bg-white">
 
-            <i class="bi bi-currency-exchange"></i>
+            <div class="d-flex justify-content-between align-items-center">
 
-            Exchange Rate
+                <h4 class="mb-0">
 
-        </h5>
+                    💱 Currency Intelligence
 
-        <hr>
+                </h4>
 
-        <p>
+                <span class="badge bg-primary">
 
-            USD → IDR
+                    LIVE
 
-            <b>
+                </span>
 
-                {{ number_format($currency['rates']['IDR'] ?? 0,2) }}
+            </div>
 
-            </b>
+        </div>
 
-        </p>
+        <div class="card-body">
 
-        <p>
+            @php
 
-            USD → EUR
+                $rates = $currency['rates'] ?? [];
 
-            <b>
+                $usd = 1;
 
-                {{ number_format($currency['rates']['EUR'] ?? 0,2) }}
+                $idr = $rates['IDR'] ?? null;
 
-            </b>
+                $eur = $rates['EUR'] ?? null;
 
-        </p>
+                $jpy = $rates['JPY'] ?? null;
 
-        <p>
+                $gbp = $rates['GBP'] ?? null;
 
-            USD → JPY
+            @endphp
 
-            <b>
+            <table class="table table-hover align-middle">
 
-                {{ number_format($currency['rates']['JPY'] ?? 0,2) }}
+                <thead>
 
-            </b>
+                    <tr>
 
-        </p>
+                        <th>Pair</th>
+                        <th class="text-end">Rate</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>🇺🇸 USD → 🇮🇩 IDR</td>
+
+                        <td class="text-end">
+
+                            <strong>
+
+                                {{ $idr ? number_format($idr,2) : '-' }}
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>🇺🇸 USD → 🇪🇺 EUR</td>
+
+                        <td class="text-end">
+
+                            <strong>
+
+                                {{ $eur ? number_format($eur,4) : '-' }}
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>🇺🇸 USD → 🇯🇵 JPY</td>
+
+                        <td class="text-end">
+
+                            <strong>
+
+                                {{ $jpy ? number_format($jpy,2) : '-' }}
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>🇺🇸 USD → 🇬🇧 GBP</td>
+
+                        <td class="text-end">
+
+                            <strong>
+
+                                {{ $gbp ? number_format($gbp,4) : '-' }}
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <div class="d-flex justify-content-between">
+
+                <small class="text-muted">
+
+                    Base Currency
+
+                </small>
+
+                <strong>
+
+                    USD
+
+                </strong>
+
+            </div>
+
+        </div>
 
     </div>
 

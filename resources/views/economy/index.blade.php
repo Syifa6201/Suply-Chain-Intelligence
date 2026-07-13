@@ -1,535 +1,1056 @@
 @extends('layouts.app')
 
+
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div class="container-fluid">
+
+
+
+{{-- ================= HEADER ================= --}}
+
+<div class="economy-header mb-4">
+
 
     <div>
 
-        <h2 class="fw-bold">
+        <h1 class="fw-bold">
+
             📈 Global Economy Intelligence
 
-            <form method="GET" class="mb-4">
+        </h1>
 
-                <div class="row">
 
-                <div class="col-md-4">
+        <p class="text-muted">
 
-                <select
-                name="country"
-                class="form-select"
-                onchange="this.form.submit()">
-
-                @foreach($countries as $country)
-
-                <option
-                value="{{ $country->name }}"
-                {{ $selectedCountry==$country->name?'selected':'' }}>
-
-                {{ $country->name }}
-
-                </option>
-
-                @endforeach
-
-                </select>
-
-                </div>
-
-                </div>
-
-                </form>
-        </h2>
-
-        <small class="text-muted">
             Real-time Economic Indicators Monitoring
-        </small>
+
+        </p>
+
 
     </div>
 
-    <span class="badge bg-success fs-6">
-        LIVE
-    </span>
+
+
+
+    <div class="economy-actions">
+
+
+        <form method="GET" action="/economy">
+
+
+            <div class="country-search-box">
+
+
+                <i class="bi bi-search"></i>
+
+
+                <select
+                    id="countrySelect"
+                    name="country"
+                    class="form-select"
+                    onchange="this.form.submit()">
+
+
+
+                    <option value="">
+
+                        Search Country...
+
+                    </option>
+
+
+
+                    @foreach($countries as $country)
+
+
+                    <option
+
+                    value="{{ $country->name }}"
+
+                    {{ 
+                    $selectedCountry == $country->name
+                    ? 'selected'
+                    : ''
+                    }}
+
+                    >
+
+                    🌍 {{ $country->name }}
+
+                    </option>
+
+
+                    @endforeach
+
+
+
+                </select>
+
+
+            </div>
+
+
+
+        </form>
+
+
+
+        <span class="live-badge">
+
+            ● LIVE DATA
+
+        </span>
+
+
+    </div>
+
+
 
 </div>
+
+
+
+
+
+
+{{-- ================= KPI ================= --}}
 
 
 <div class="row g-4">
 
-    <div class="col-lg-4">
-
-        <div class="card card-custom p-4 h-100">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h6 class="text-muted">
-                        GDP
-                    </h6>
-
-                    <h3>
-
-                        ${{ number_format($gdpValue,0,',','.') }}
-
-                    </h3>
-
-                    <small class="text-success">
-
-                        Gross Domestic Product
-
-                    </small>
-
-                </div>
-
-                <i class="bi bi-graph-up-arrow text-success fs-1"></i>
-
-            </div>
-
-        </div>
-
-    </div>
 
 
-    <div class="col-lg-4">
-
-        <div class="card card-custom p-4 h-100">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h6 class="text-muted">
-
-                        Inflation
-
-                    </h6>
-
-                    <h3>
-
-                        {{ round($inflationValue,2) }} %
-
-                    </h3>
-
-                    <small class="text-warning">
-
-                        Consumer Price Index
-
-                    </small>
-
-                </div>
-
-                <i class="bi bi-currency-dollar text-warning fs-1"></i>
-
-            </div>
-
-        </div>
-
-    </div>
+<div class="col-xl-3 col-md-6">
 
 
-    <div class="col-lg-4">
+<div class="economy-card">
 
-        <div class="card card-custom p-4 h-100">
 
-            <div class="d-flex justify-content-between align-items-center">
+<div class="economy-icon blue">
 
-                <div>
+<i class="bi bi-graph-up-arrow"></i>
 
-                    <h6 class="text-muted">
+</div>
 
-                        Population
 
-                    </h6>
+<h6>
 
-                    <h3>
+GDP
 
-                        {{ number_format($populationValue,0,',','.') }}
+</h6>
 
-                    </h3>
 
-                    <small class="text-primary">
+<h2>
 
-                        Total Population
+${{number_format($gdpValue,0,',','.') }}
 
-                    </small>
+</h2>
 
-                </div>
 
-                <i class="bi bi-people-fill text-primary fs-1"></i>
+<p>
 
-            </div>
+Gross Domestic Product
 
-        </div>
+</p>
 
-    </div>
+
+</div>
+
 
 </div>
 
 
 
-<div class="row g-4 mt-1">
-
-    <div class="col-lg-6">
-
-        <div class="card card-custom p-4 h-100">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h6 class="text-muted">
-
-                        Export
-
-                    </h6>
-
-                    <h3>
-
-                        ${{ number_format($exportValue,0,',','.') }}
-
-                    </h3>
-
-                    <small class="text-success">
-
-                        Export Value
-
-                    </small>
-
-                </div>
-
-                <i class="bi bi-box-arrow-up-right text-success fs-1"></i>
-
-            </div>
-
-        </div>
-
-    </div>
 
 
-    <div class="col-lg-6">
+<div class="col-xl-3 col-md-6">
 
-        <div class="card card-custom p-4 h-100">
 
-            <div class="d-flex justify-content-between align-items-center">
+<div class="economy-card">
 
-                <div>
 
-                    <h6 class="text-muted">
+<div class="economy-icon orange">
 
-                        Import
+<i class="bi bi-currency-exchange"></i>
 
-                    </h6>
+</div>
 
-                    <h3>
 
-                        ${{ number_format($importValue,0,',','.') }}
+<h6>
 
-                    </h3>
+Inflation
 
-                    <small class="text-danger">
+</h6>
 
-                        Import Value
 
-                    </small>
+<h2>
 
-                </div>
+{{round($inflationValue,2)}}%
 
-                <i class="bi bi-box-arrow-in-down text-danger fs-1"></i>
+</h2>
 
-            </div>
 
-        </div>
+<p>
 
-    </div>
+Consumer Price Index
+
+</p>
+
+
+</div>
+
 
 </div>
 
 
 
-<div class="row mt-4">
-
-    <div class="col-lg-8">
-
-        <div class="card card-custom p-4">
-
-            <h4>
-
-                📊 Economic Indicators
-
-            </h4>
-
-            <hr>
-
-            <div style="height:350px">
-
-                <canvas id="economyChart"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
 
 
-    <div class="col-lg-4">
 
-        <div class="card card-custom p-4 h-100">
+<div class="col-xl-3 col-md-6">
 
-            <h4>
 
-                📋 Economic Summary
+<div class="economy-card">
 
-            </h4>
 
-            <hr>
+<div class="economy-icon green">
 
-            <table class="table table-borderless">
+<i class="bi bi-people"></i>
 
-                <tr>
+</div>
 
-                    <td>GDP</td>
 
-                    <td>
+<h6>
 
-                        <b>${{ number_format($gdpValue,0,',','.') }}</b>
+Population
 
-                    </td>
+</h6>
 
-                </tr>
 
-                <tr>
+<h2>
 
-                    <td>Inflation</td>
+{{number_format($populationValue)}}
 
-                    <td>
+</h2>
 
-                        <span class="badge bg-warning">
 
-                            {{ round($inflationValue,2) }}%
+<p>
 
-                        </span>
+Total Population
 
-                    </td>
+</p>
 
-                </tr>
 
-                <tr>
+</div>
 
-                    <td>Population</td>
-
-                    <td>
-
-                        {{ number_format($populationValue) }}
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Trade Balance</td>
-
-                    <td>
-
-                        @if($exportValue>$importValue)
-
-                            <span class="badge bg-success">
-
-                                Surplus
-
-                            </span>
-
-                        @else
-
-                            <span class="badge bg-danger">
-
-                                Deficit
-
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                </tr>
-
-            </table>
-
-        </div>
-
-    </div>
 
 </div>
 
 
 
-<div class="row mt-4">
-
-    <div class="col-lg-6">
-
-        <div class="card card-custom p-4 h-100">
-
-            <h4>
-
-                📦 Trade Analysis
-
-            </h4>
-
-            <hr>
-
-            @if($exportValue>$importValue)
-
-                <div class="alert alert-success">
-
-                    <b>Trade Surplus</b>
-
-                    <br>
-
-                    Export value exceeds import value.
-
-                </div>
-
-            @else
-
-                <div class="alert alert-warning">
-
-                    <b>Trade Deficit</b>
-
-                    <br>
-
-                    Import value exceeds export value.
-
-                </div>
-
-            @endif
-
-        </div>
-
-    </div>
 
 
 
-    <div class="col-lg-6">
 
-        <div class="card card-custom p-4 h-100">
+<div class="col-xl-3 col-md-6">
 
-            <h4>
 
-                🤖 AI Economic Recommendation
+<div class="economy-card">
 
-            </h4>
 
-            <hr>
+<div class="economy-icon purple">
 
-            @if($inflationValue>8)
-
-                <div class="alert alert-danger">
-
-                    Inflation is high. Monitor investment and trade risks.
-
-                </div>
-
-            @elseif($inflationValue>4)
-
-                <div class="alert alert-warning">
-
-                    Moderate inflation. Monitor market conditions.
-
-                </div>
-
-            @else
-
-                <div class="alert alert-success">
-
-                    Economic indicators remain stable.
-
-                </div>
-
-            @endif
-
-        </div>
-
-    </div>
+<i class="bi bi-box-seam"></i>
 
 </div>
 
+
+<h6>
+
+Trade Balance
+
+</h6>
+
+
+
+<h2>
+
+
+@if($exportValue > $importValue)
+
+Surplus
+
+@else
+
+Deficit
+
+@endif
+
+
+</h2>
+
+
+
+<p>
+
+Export vs Import
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- ================= CHART ================= --}}
+
+
+
+<div class="row mt-4 g-4">
+
+
+
+<div class="col-lg-8">
+
+
+<div class="card-custom p-4">
+
+
+<h4>
+
+📊 Economic Indicators
+
+</h4>
+
+
+<p class="text-muted">
+
+Economic performance analysis
+
+</p>
+
+
+
+<div style="height:350px">
+
+<canvas id="economyChart"></canvas>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="card-custom p-4">
+
+
+<h4>
+
+📋 Economic Summary
+
+</h4>
+
+
+<hr>
+
+
+
+
+<div class="summary-row">
+
+<span>
+GDP
+</span>
+
+
+<strong>
+
+${{number_format($gdpValue)}}
+
+</strong>
+
+
+</div>
+
+
+
+
+<div class="summary-row">
+
+<span>
+
+Inflation
+
+</span>
+
+
+<strong>
+
+{{round($inflationValue,2)}} %
+
+</strong>
+
+
+</div>
+
+
+
+
+<div class="summary-row">
+
+<span>
+
+Population
+
+</span>
+
+
+<strong>
+
+{{number_format($populationValue)}}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+<div class="summary-row">
+
+<span>
+
+Trade
+
+</span>
+
+
+@if($exportValue>$importValue)
+
+<span class="badge bg-success">
+
+Surplus
+
+</span>
+
+
+@else
+
+<span class="badge bg-danger">
+
+Deficit
+
+</span>
+
+@endif
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+{{-- ================= AI ANALYSIS ================= --}}
+
+
+
+<div class="row mt-4 g-4">
+
+
+
+<div class="col-lg-6">
+
+
+<div class="card-custom p-4">
+
+
+<h4>
+
+📦 Trade Analysis
+
+</h4>
+
+
+<hr>
+
+
+
+@if($exportValue>$importValue)
+
+
+<div class="analysis-success">
+
+
+<h5>
+
+Trade Surplus
+
+</h5>
+
+
+<p>
+
+Export value exceeds import dependency.
+
+</p>
+
+
+</div>
+
+
+
+@else
+
+
+<div class="analysis-warning">
+
+
+<h5>
+
+Trade Deficit
+
+</h5>
+
+
+<p>
+
+Import dependency is higher.
+
+</p>
+
+
+</div>
+
+
+
+@endif
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-lg-6">
+
+
+<div class="card-custom p-4">
+
+
+<h4>
+
+🤖 AI Economic Recommendation
+
+</h4>
+
+
+<hr>
+
+
+
+@if($inflationValue>8)
+
+
+<div class="alert alert-danger">
+
+High inflation detected.
+Monitor trade risk.
+
+</div>
+
+
+@elseif($inflationValue>4)
+
+
+<div class="alert alert-warning">
+
+Moderate inflation.
+Monitor market condition.
+
+</div>
+
+
+@else
+
+
+<div class="alert alert-success">
+
+Economic condition stable.
+
+</div>
+
+
+@endif
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+@endsection
+
+
+
+
+
+
+@push('scripts')
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 <script>
+
 
 new Chart(
 
-document.getElementById("economyChart"),
+document.getElementById('economyChart'),
 
 {
 
-type:"bar",
+
+type:'bar',
+
 
 data:{
 
+
 labels:[
 
-"GDP",
-
-"Inflation",
-
-"Population",
-
-"Export",
-
-"Import"
+'GDP',
+'Inflation',
+'Population',
+'Export',
+'Import'
 
 ],
+
+
 
 datasets:[{
 
-label:"Economic Indicators",
+
+label:'Economic Indicators',
+
 
 data:[
 
-{{ $gdpValue/1000000000000 }},
 
-{{ round($inflationValue,2) }},
+{{$gdpValue/1000000000000}},
 
-{{ $populationValue/1000000 }},
 
-{{ $exportValue/1000000000 }},
+{{round($inflationValue,2)}},
 
-{{ $importValue/1000000000 }}
+
+{{$populationValue/1000000}},
+
+
+{{$exportValue/1000000000}},
+
+
+{{$importValue/1000000000}}
+
 
 ],
 
-borderWidth:1
+
+borderWidth:2
+
 
 }]
 
 },
 
+
 options:{
+
 
 responsive:true,
 
+
 maintainAspectRatio:false,
+
 
 plugins:{
 
+
 legend:{
+
 
 display:false
 
-}
 
 }
 
-}
 
 }
+
+
+}
+
+
+}
+
+
 
 );
 
+
 </script>
 
-@endsection
+
+@endpush
+
+
+
+
+
+
+
+<style>
+
+
+
+.economy-header{
+
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+gap:30px;
+
+
+}
+
+
+
+.economy-actions{
+
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+
+}
+
+
+
+
+
+.country-search-box{
+
+
+display:flex;
+
+align-items:center;
+
+
+background:white;
+
+
+padding:8px 15px;
+
+
+border-radius:18px;
+
+
+box-shadow:
+
+0 10px 25px rgba(15,23,42,.08);
+
+
+border:1px solid #e2e8f0;
+
+
+}
+
+
+
+.country-search-box i{
+
+
+color:#0284c7;
+
+font-size:20px;
+
+}
+
+
+
+.country-search-box select{
+
+
+border:none;
+
+width:280px;
+
+
+}
+
+
+
+.country-search-box select:focus{
+
+
+box-shadow:none;
+
+
+}
+
+
+
+
+.live-badge{
+
+
+background:#dcfce7;
+
+
+color:#15803d;
+
+
+padding:12px 22px;
+
+
+border-radius:50px;
+
+
+font-weight:700;
+
+
+}
+
+
+
+
+.economy-card{
+
+
+background:white;
+
+
+padding:28px;
+
+
+border-radius:25px;
+
+
+height:220px;
+
+
+box-shadow:
+
+0 15px 35px rgba(15,23,42,.08);
+
+
+transition:.3s;
+
+
+}
+
+
+
+.economy-card:hover{
+
+
+transform:translateY(-7px);
+
+
+}
+
+
+
+
+
+.economy-icon{
+
+
+width:55px;
+
+height:55px;
+
+
+border-radius:18px;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+font-size:25px;
+
+
+margin-bottom:20px;
+
+
+}
+
+
+
+.blue{
+
+background:#dbeafe;
+
+color:#2563eb;
+
+}
+
+
+.orange{
+
+background:#ffedd5;
+
+color:#ea580c;
+
+}
+
+
+.green{
+
+background:#dcfce7;
+
+color:#16a34a;
+
+}
+
+
+.purple{
+
+background:#ede9fe;
+
+color:#7c3aed;
+
+}
+
+
+
+
+
+.summary-row{
+
+
+display:flex;
+
+justify-content:space-between;
+
+
+padding:15px 0;
+
+
+border-bottom:1px solid #e2e8f0;
+
+
+}
+
+
+
+
+.analysis-success{
+
+
+background:#dcfce7;
+
+
+padding:20px;
+
+
+border-radius:20px;
+
+
+}
+
+
+
+.analysis-warning{
+
+
+background:#fef3c7;
+
+
+padding:20px;
+
+
+border-radius:20px;
+
+
+}
+
+
+
+</style>

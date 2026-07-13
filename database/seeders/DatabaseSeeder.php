@@ -32,5 +32,27 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
+        $this->call([
+            VesselSeeder::class,
+        ]);
+
+        $this->call([
+
+            ShippingRouteSeeder::class
+
+        ]);
+
+        $this->call([
+
+    ShippingLaneSeeder::class,
+
+]);
+
+$this->call([
+
+    TradeRiskSeeder::class,
+
+]);
+
     }
 }

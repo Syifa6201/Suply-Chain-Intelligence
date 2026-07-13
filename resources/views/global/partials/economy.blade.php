@@ -1,46 +1,133 @@
-<div class="col-lg-4">
+<div class="card card-custom shadow-sm border-0 h-100">
 
-    <div class="card card-custom p-4 h-100">
+    <div class="card-header bg-white">
+
+        <h4 class="mb-0">
+
+            📈 Economy Intelligence
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
 
         @php
 
             $data = $economy[1][0] ?? null;
 
-            $gdp = $data['value'] ?? null;
+            $gdp = $data['value'] ?? 0;
 
             $year = $data['date'] ?? '-';
 
+            $status = 'Stable';
+            $color = 'success';
+
+            if($gdp <= 0){
+
+                $status = 'Unavailable';
+                $color = 'secondary';
+
+            }
+
         @endphp
 
-        <h5>
 
-            <i class="bi bi-graph-up"></i>
+        <div class="text-center mb-4">
 
-            Economy
+            <h2 class="fw-bold">
 
-        </h5>
+                @if($gdp>0)
+
+                    ${{ number_format($gdp/1000000000000,2) }} T
+
+                @else
+
+                    -
+
+                @endif
+
+            </h2>
+
+            <span class="badge bg-{{ $color }}">
+
+                {{ $status }}
+
+            </span>
+
+        </div>
+
 
         <hr>
 
-        <h2>
 
-            @if($gdp)
+        <table class="table table-borderless table-sm">
 
-                ${{ number_format($gdp/1000000000000,2) }} T
+            <tr>
 
-            @else
+                <td>
 
-                -
+                    Year
 
-            @endif
+                </td>
 
-        </h2>
+                <td class="text-end">
 
-        <small>
+                    <strong>
 
-            {{ $year }}
+                        {{ $year }}
 
-        </small>
+                    </strong>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    GDP
+
+                </td>
+
+                <td class="text-end">
+
+                    @if($gdp>0)
+
+                        {{ number_format($gdp,0,'.',',') }}
+
+                    @else
+
+                        -
+
+                    @endif
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+
+                    Status
+
+                </td>
+
+                <td class="text-end">
+
+                    <span class="badge bg-{{ $color }}">
+
+                        {{ $status }}
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+        </table>
 
     </div>
 

@@ -1,46 +1,76 @@
-<div class="row mt-4">
+<div class="card card-custom shadow-sm border-0 h-100">
 
-    <div class="col-12">
+    <div class="card-header bg-white">
 
-        <div class="card card-custom p-4">
+        <div class="d-flex justify-content-between align-items-center">
 
-            <h4>
+            <h4 class="mb-0">
 
-                <i class="bi bi-newspaper"></i>
-
-                Latest Global News
+                📰 Latest Global News
 
             </h4>
 
-            <hr>
+            <span class="badge bg-primary">
 
-            @foreach(($news['articles'] ?? []) as $article)
+                {{ count($news) }}
 
-                @break($loop->index==5)
-
-                <div class="mb-3">
-
-                    <a href="{{ $article['url'] }}"
-                       target="_blank"
-                       class="fw-bold text-decoration-none">
-
-                        {{ $article['title'] }}
-
-                    </a>
-
-                    <br>
-
-                    <small class="text-muted">
-
-                        {{ $article['source']['name'] }}
-
-                    </small>
-
-                </div>
-
-            @endforeach
+            </span>
 
         </div>
+
+    </div>
+
+    <div class="card-body">
+
+        @forelse($news as $article)
+
+            <div class="mb-4">
+
+                <a
+                    href="{{ $article['url'] ?? '#' }}"
+                    target="_blank"
+                    class="fw-bold text-decoration-none">
+
+                    {{ $article['title'] ?? '-' }}
+
+                </a>
+
+                <br>
+
+                <small class="text-muted">
+
+                    {{ $article['source']['name'] ?? 'Unknown Source' }}
+
+                </small>
+
+                <br>
+
+                <small class="text-secondary">
+
+                    {{ isset($article['publishedAt'])
+                        ? \Carbon\Carbon::parse($article['publishedAt'])->format('d M Y H:i')
+                        : '-'
+                    }}
+
+                </small>
+
+            </div>
+
+            @if(!$loop->last)
+
+                <hr>
+
+            @endif
+
+        @empty
+
+            <div class="alert alert-warning mb-0">
+
+                No news available.
+
+            </div>
+
+        @endforelse
 
     </div>
 

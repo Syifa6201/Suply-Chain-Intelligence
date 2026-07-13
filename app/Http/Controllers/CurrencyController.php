@@ -2,35 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
+use App\Models\Country;
+
 
 class CurrencyController extends Controller
 {
-    public function index()
-    {
-        $response = Http::get('https://open.er-api.com/v6/latest/USD');
 
-        $data = $response->json();
 
-        $rates = $data['rates'] ?? [];
+public function index(Request $request)
+{
 
-        $usdToIdr = $rates['IDR'] ?? 0;
-        $usdToEur = $rates['EUR'] ?? 0;
-        $usdToCny = $rates['CNY'] ?? 0;
 
-        $risk = "Low";
+$countries = Country::orderBy('name')->get();
 
-        if ($usdToIdr > 17000) {
-            $risk = "High";
-        } elseif ($usdToIdr > 16500) {
-            $risk = "Medium";
-        }
 
-        return view('currency.index', compact(
-            'usdToIdr',
-            'usdToEur',
-            'usdToCny',
-            'risk'
-        ));
-    }
+
+$selectedCountry = null;
+
+$currencyData = null;
+
+
+
+if($request->country){
+
+
+
+$selectedCountry = Country::find($request->country);
+
+
+
+if($selectedCountry){
+
+
+
+$currencyData = [
+
+
+'name'=>$selectedCountry->name,
+
+
+'currency'=>$selectedCountry->currency ?? 'USD',
+
+
+'rate'=>rand(1000,18000),
+
+
+'status'=>
+
+rand(0,1)
+
+?
+
+'Stable'
+
+:
+
+'Warning',
+
+
+
+];
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+return view(
+'currency.index',
+compact(
+
+'countries',
+
+'selectedCountry',
+
+'currencyData'
+
+)
+
+);
+
+
+
+}
+
+
+
 }

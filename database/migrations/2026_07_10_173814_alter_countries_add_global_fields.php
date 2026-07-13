@@ -10,17 +10,53 @@ return new class extends Migration
     {
         Schema::table('countries', function (Blueprint $table) {
 
-            $table->string('region')->nullable()->after('capital');
+            if (!Schema::hasColumn('countries', 'region')) {
 
-            $table->string('subregion')->nullable()->after('region');
+                $table->string('region')
+                    ->nullable()
+                    ->after('capital');
 
-            $table->string('currency')->nullable()->after('subregion');
+            }
 
-            $table->string('currency_name')->nullable()->after('currency');
+            if (!Schema::hasColumn('countries', 'subregion')) {
 
-            $table->string('timezone')->nullable()->after('currency_name');
+                $table->string('subregion')
+                    ->nullable()
+                    ->after('region');
 
-            $table->string('continent')->nullable()->after('timezone');
+            }
+
+            if (!Schema::hasColumn('countries', 'currency')) {
+
+                $table->string('currency')
+                    ->nullable()
+                    ->after('subregion');
+
+            }
+
+            if (!Schema::hasColumn('countries', 'currency_name')) {
+
+                $table->string('currency_name')
+                    ->nullable()
+                    ->after('currency');
+
+            }
+
+            if (!Schema::hasColumn('countries', 'timezone')) {
+
+                $table->string('timezone')
+                    ->nullable()
+                    ->after('currency_name');
+
+            }
+
+            if (!Schema::hasColumn('countries', 'continent')) {
+
+                $table->string('continent')
+                    ->nullable()
+                    ->after('timezone');
+
+            }
 
         });
     }
@@ -29,21 +65,21 @@ return new class extends Migration
     {
         Schema::table('countries', function (Blueprint $table) {
 
-            $table->dropColumn([
+            if (Schema::hasColumn('countries', 'continent')) {
+                $table->dropColumn('continent');
+            }
 
-                'region',
+            if (Schema::hasColumn('countries', 'timezone')) {
+                $table->dropColumn('timezone');
+            }
 
-                'subregion',
+            if (Schema::hasColumn('countries', 'currency_name')) {
+                $table->dropColumn('currency_name');
+            }
 
-                'currency',
-
-                'currency_name',
-
-                'timezone',
-
-                'continent'
-
-            ]);
+            if (Schema::hasColumn('countries', 'subregion')) {
+                $table->dropColumn('subregion');
+            }
 
         });
     }

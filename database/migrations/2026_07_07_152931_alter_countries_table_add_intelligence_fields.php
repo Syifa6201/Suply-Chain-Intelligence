@@ -6,36 +6,129 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
+
         Schema::table('countries', function (Blueprint $table) {
 
-            $table->string('iso2')->nullable()->after('code');
-            $table->string('iso3')->nullable()->after('iso2');
 
-            $table->string('capital')->nullable()->after('language');
+            if (!Schema::hasColumn('countries','code')) {
 
-            $table->decimal('latitude', 10, 6)->nullable()->after('capital');
-            $table->decimal('longitude', 10, 6)->nullable()->after('latitude');
+                $table->string('code')
+                    ->nullable()
+                    ->unique();
 
-            $table->string('flag')->nullable()->after('longitude');
+            }
+
+
+            if (!Schema::hasColumn('countries','iso2')) {
+
+                $table->string('iso2')
+                    ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','iso3')) {
+
+                $table->string('iso3')
+                    ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','language')) {
+
+                $table->string('language')
+                    ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','capital')) {
+
+                $table->string('capital')
+                    ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','latitude')) {
+
+                $table->decimal(
+                    'latitude',
+                    10,
+                    6
+                )
+                ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','longitude')) {
+
+                $table->decimal(
+                    'longitude',
+                    10,
+                    6
+                )
+                ->nullable();
+
+            }
+
+
+            if (!Schema::hasColumn('countries','flag')) {
+
+                $table->string('flag')
+                    ->nullable();
+
+            }
+
 
         });
+
     }
+
+
 
     public function down(): void
     {
+
         Schema::table('countries', function (Blueprint $table) {
 
-            $table->dropColumn([
+
+            $columns = [
+
+                'code',
                 'iso2',
                 'iso3',
+                'language',
                 'capital',
                 'latitude',
                 'longitude',
                 'flag'
-            ]);
+
+            ];
+
+
+            foreach($columns as $column){
+
+
+                if(Schema::hasColumn('countries',$column)){
+
+
+                    $table->dropColumn($column);
+
+
+                }
+
+
+            }
+
 
         });
+
     }
+
 };

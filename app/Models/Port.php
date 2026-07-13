@@ -4,30 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Port extends Model
 {
-    protected $fillable = [
 
-        'country_id',
 
-        'name',
+protected $fillable=[
 
-        'city',
 
-        'latitude',
+'name',
 
-        'longitude',
+'country_id',
 
-        'status',
+'latitude',
 
-        'congestion',
+'longitude',
 
-        'capacity'
+'terminal',
 
-    ];
+'type',
 
-    public function country()
-    {
-        return $this->belongsTo(Country::class);
-    }
+'capacity',
+
+'congestion',
+
+'status',
+
+'risk_score'
+
+
+];
+
+
+
+
+public function country()
+{
+
+return $this->belongsTo(
+Country::class
+);
+
+}
+
+
+
 }
