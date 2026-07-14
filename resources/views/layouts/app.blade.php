@@ -828,6 +828,19 @@ AI
 {{ __('messages.profile') }}
 
 </a>
+<form method="POST" action="{{route('logout')}}">
+
+@csrf
+
+<button 
+class="btn btn-danger btn-sm"
+>
+
+Logout
+
+</button>
+
+</form>
 </div>
 
 

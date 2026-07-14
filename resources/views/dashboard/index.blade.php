@@ -250,20 +250,17 @@ Trade Intelligence
 </h4>
 
 
-<a href="#"
-class="dashboard-menu">
+<a href="{{ route('recommendation.index') }}" class="dashboard-menu">
 
-<i class="bi bi-lightning"></i>
+    <i class="bi bi-lightning-charge"></i>
 
-Recommendation Engine
+    Recommendation Engine
 
 </a>
 
 
 
-<a href="#"
-class="dashboard-menu">
-
+<a href="{{ route('trade.prediction') }}" class="dashboard-menu">
 <i class="bi bi-stars"></i>
 
 Trade Prediction

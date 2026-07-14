@@ -279,10 +279,7 @@ Recommendation Engine
 
 
 
-<a href="#"
-onclick="alert('Prediction Engine Coming Soon')">
-
-
+<a href="{{route('trade.prediction')}}">
 <i class="bi bi-stars"></i>
 
 

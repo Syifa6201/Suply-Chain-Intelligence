@@ -36,19 +36,110 @@ use App\Http\Controllers\TradeIntelligenceController;
 use App\Http\Controllers\TradeRiskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\TradePredictionController;
+
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+
+use App\Http\Controllers\Admin\UserController;
+
+use App\Http\Controllers\Admin\PortController;
+
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/login',
+    [
+        LoginController::class,
+        'index'
+    ]
+)->name('login');
+
+
+Route::post(
+    '/login',
+    [
+        LoginController::class,
+        'login'
+    ]
+)->name('login.process');
+
+
+
+Route::get(
+    '/register',
+    [
+        RegisterController::class,
+        'index'
+    ]
+)->name('register');
+
+
+
+Route::post(
+    '/register',
+    [
+        RegisterController::class,
+        'store'
+    ]
+)->name('register.store');
+
+
+
+Route::post(
+    '/logout',
+    [
+        LoginController::class,
+        'logout'
+    ]
+)->name('logout');
+
 
 
 
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD
+| HOME
 |--------------------------------------------------------------------------
 */
 
 
 Route::get('/', function(){
 
+    return redirect('/login');
+
+});
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| USER DASHBOARD
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get('/dashboard', function(){
+
+
+    if(!session()->has('user_id')){
+
+        return redirect('/login');
+
+    }
 
 
     $countries = Country::count();
@@ -62,54 +153,71 @@ Route::get('/', function(){
 
 
     $activeVessel = Vessel::where(
-
         'status',
-
         'Sailing'
-
     )->count();
-
-
 
 
 
     $delayedVessel = Vessel::where(
-
         'status',
-
         'Delayed'
-
     )->count();
 
 
 
-
-
-
     return view(
-
         'dashboard.index',
-
         compact(
-
             'countries',
-
             'ports',
-
             'vessels',
-
             'activeVessel',
-
             'delayedVessel'
-
         )
-
     );
 
 
+})->name('dashboard');
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN AREA
+|--------------------------------------------------------------------------
+*/
+
+
+Route::middleware(['admin'])
+->prefix('admin')
+->group(function(){
+
+
+    Route::get(
+        '/',
+        [
+            AdminDashboardController::class,
+            'index'
+        ]
+    )
+    ->name('admin.dashboard');
+
+Route::resource(
+    'users',
+    UserController::class
+);
+
+Route::resource(
+    'ports',
+    PortController::class
+);
+
 
 });
-
 
 
 
@@ -125,10 +233,11 @@ Route::get('/', function(){
 
 Route::get(
     '/global',
-    [GlobalController::class,'index']
+    [
+        GlobalController::class,
+        'index'
+    ]
 );
-
-
 
 
 
@@ -145,12 +254,9 @@ Route::get(
 
 
 
-
-
-
 /*
 |--------------------------------------------------------------------------
-| COUNTRY
+| COUNTRIES
 |--------------------------------------------------------------------------
 */
 
@@ -162,9 +268,6 @@ Route::get(
         'index'
     ]
 );
-
-
-
 
 
 
@@ -189,8 +292,6 @@ Route::get(
 
 
 
-
-
 /*
 |--------------------------------------------------------------------------
 | ECONOMY
@@ -210,8 +311,6 @@ Route::get(
 
 
 
-
-
 /*
 |--------------------------------------------------------------------------
 | CURRENCY
@@ -226,8 +325,6 @@ Route::get(
         'index'
     ]
 );
-
-
 
 
 
@@ -254,11 +351,9 @@ Route::get(
 
 
 
-
-
 /*
 |--------------------------------------------------------------------------
-| RISK ENGINE
+| RISK
 |--------------------------------------------------------------------------
 */
 
@@ -270,9 +365,6 @@ Route::get(
         'index'
     ]
 );
-
-
-
 
 
 
@@ -291,11 +383,9 @@ Route::get(
 
 
 
-
-
 /*
 |--------------------------------------------------------------------------
-| PORT INTELLIGENCE
+| PORT
 |--------------------------------------------------------------------------
 */
 
@@ -314,12 +404,9 @@ Route::get(
 
 
 
-
-
-
 /*
 |--------------------------------------------------------------------------
-| VESSEL MONITORING
+| VESSEL
 |--------------------------------------------------------------------------
 */
 
@@ -334,25 +421,12 @@ Route::get(
 
 
 
-
-
-
-/*
-|--------------------------------------------------------------------------
-| VESSEL API REALTIME
-|--------------------------------------------------------------------------
-*/
-
-
 Route::get(
-
     '/api/vessels/live',
-
     [
         VesselApiController::class,
         'live'
     ]
-
 );
 
 
@@ -361,28 +435,34 @@ Route::get(
 
 
 
-
 /*
 |--------------------------------------------------------------------------
-| TRADE INTELLIGENCE
+| TRADE
 |--------------------------------------------------------------------------
 */
 
 
 Route::get(
-
     '/trade-intelligence',
-
     [
         TradeIntelligenceController::class,
         'index'
     ]
-
 )
-
 ->name('trade.index');
 
 
+
+
+
+Route::get(
+    '/trade-prediction',
+    [
+        TradePredictionController::class,
+        'index'
+    ]
+)
+->name('trade.prediction');
 
 
 
@@ -398,62 +478,47 @@ Route::get(
 
 
 Route::get(
-
     '/profile',
-
     [
         ProfileController::class,
         'index'
     ]
-
 )
-
 ->name('profile.index');
 
 
 
-
-
 Route::post(
-
     '/profile/update',
-
     [
         ProfileController::class,
         'update'
     ]
-
 )
-
 ->name('profile.update');
 
 
 
-
-
-
 Route::post(
-
     '/profile/password',
-
     [
         ProfileController::class,
         'password'
     ]
-
 )
-
 ->name('profile.password');
+
+
+
+
 
 
 
 /*
 |--------------------------------------------------------------------------
-| SETTING
+| SETTINGS
 |--------------------------------------------------------------------------
 */
-
-
 
 
 Route::get(
@@ -475,3 +540,44 @@ Route::post(
     ]
 )
 ->name('settings.update');
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| RECOMMENDATION
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/recommendation',
+    [
+        RecommendationController::class,
+        'index'
+    ]
+)
+->name('recommendation.index');
+
+
+
+Route::get(
+    '/recommendation/{country}',
+    [
+        RecommendationController::class,
+        'show'
+    ]
+)
+->name('recommendation.show');
+
+
+
+Route::get('/test-session', function(){
+
+    return session()->all();
+
+});

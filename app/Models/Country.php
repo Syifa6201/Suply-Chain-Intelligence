@@ -52,5 +52,19 @@ class Country extends Model
         );
     }
 
+    public function recommendation()
+{
+    return $this->hasOne(Recommendation::class);
+}
+
+public function recommendationHistories()
+{
+
+    return $this->hasMany(
+        RecommendationHistory::class
+    );
+
+}
+
 
 }

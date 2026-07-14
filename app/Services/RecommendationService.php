@@ -2,6 +2,15 @@
 
 namespace App\Services;
 
+
+use App\Models\Country;
+use App\Models\EconomicData;
+use App\Models\CurrencyRate;
+use App\Models\WeatherData;
+use App\Models\NewsCache;
+use App\Models\Port;
+use App\Models\RiskScore;
+
 class RecommendationService
 {
     public function generate($risk, $weather, $news)
@@ -110,4 +119,394 @@ class RecommendationService
 
         ];
     }
+
+    public function calculateTradeScore($country)
+{
+
+    /*
+    |--------------------------------------------------------------------------
+    | ECONOMY
+    |--------------------------------------------------------------------------
+    */
+
+    $economy = 70;
+
+    if($country->statistic){
+
+        if($country->statistic->gdp){
+
+            $economy = min(
+                100,
+                max(
+                    50,
+                    $country->statistic->gdp / 100000
+                )
+            );
+
+        }
+
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CURRENCY
+    |--------------------------------------------------------------------------
+    */
+
+    $currency = 75;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | WEATHER
+    |--------------------------------------------------------------------------
+    */
+
+    $weather = 80;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | NEWS
+    |--------------------------------------------------------------------------
+    */
+
+    $news = 75;
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PORT
+    |--------------------------------------------------------------------------
+    */
+
+    $portScore = 60;
+
+
+    $ports = $country->ports;
+
+
+    if($ports->count()){
+
+
+        $avgCongestion = $ports->avg(
+            'congestion'
+        );
+
+
+        $portScore = max(
+
+            40,
+
+            100 - $avgCongestion
+
+        );
+
+
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RISK
+    |--------------------------------------------------------------------------
+    */
+
+    $risk = 75;
+
+
+
+    if($country->risk_score){
+
+        $risk = 100 - $country->risk_score;
+
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FINAL SCORE
+    |--------------------------------------------------------------------------
+    */
+
+
+    $score =
+
+        ($economy * 0.25)
+
+        +
+
+        ($currency * 0.20)
+
+        +
+
+        ($weather * 0.15)
+
+        +
+
+        ($news * 0.10)
+
+        +
+
+        ($portScore * 0.20)
+
+        +
+
+        ($risk * 0.10);
+
+
+
+    $score = round($score,1);
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RECOMMENDATION
+    |--------------------------------------------------------------------------
+    */
+
+
+    if($score >= 90){
+
+        $recommendation =
+        "Expand Export";
+
+        $badge =
+        "success";
+
+
+    }elseif($score >=80){
+
+
+        $recommendation =
+        "Recommended";
+
+        $badge =
+        "primary";
+
+
+    }elseif($score >=65){
+
+
+        $recommendation =
+        "Monitor";
+
+        $badge =
+        "warning";
+
+
+    }else{
+
+
+        $recommendation =
+        "High Risk";
+
+        $badge =
+        "danger";
+
+
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIDENCE
+    |--------------------------------------------------------------------------
+    */
+
+
+    $confidence = min(
+
+        100,
+
+        round(
+            80 + ($score/5)
+        )
+
+    );
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AI REASON
+    |--------------------------------------------------------------------------
+    */
+
+
+    $reason=[];
+
+
+    if($economy>=80){
+
+        $reason[]="Strong Economy";
+
+    }
+
+
+    if($currency>=80){
+
+        $reason[]="Stable Currency";
+
+    }
+
+
+    if($weather>=80){
+
+        $reason[]="Good Weather";
+
+    }
+
+
+    if($portScore>=80){
+
+        $reason[]="Efficient Port";
+
+    }
+
+
+    if($risk>=80){
+
+        $reason[]="Low Risk";
+
+    }
+
+
+
+    return [
+
+'economy'=>round($economy),
+
+'currency'=>round($currency),
+
+'weather'=>round($weather),
+
+'news'=>round($news),
+
+'port'=>round($portScore),
+
+'risk'=>round($risk),
+
+'score'=>$score,
+
+'confidence'=>$confidence,
+
+'badge'=>$badge,
+
+'recommendation'=>$recommendation,
+
+'reason'=>implode(', ', $reason),
+
+'explanation'=>$this->generateExplanation(
+
+    $country,
+
+    $recommendation,
+
+    $score,
+
+    $reason
+
+)
+
+];
+
+}
+
+private function generateExplanation(
+
+    $country,
+
+    $recommendation,
+
+    $score,
+
+    $reason
+
+){
+
+    $text = "";
+
+
+    $text .= $country->name;
+
+
+    $text .= " mendapatkan rekomendasi ";
+
+
+    $text .= $recommendation;
+
+
+    $text .= " dengan Trade Score ";
+
+
+    $text .= $score;
+
+
+    $text .= ". ";
+
+
+
+    if(count($reason)>0){
+
+
+        $text .= "Faktor pendukung utama: ";
+
+
+        $text .= implode(
+            ', ',
+            $reason
+        );
+
+
+        $text .= ".";
+
+
+    }
+
+
+
+    if($score >= 85){
+
+
+        $text .= 
+        " Negara ini memiliki kondisi perdagangan yang mendukung ekspansi bisnis.";
+
+
+    }
+
+
+    elseif($score >=65){
+
+
+        $text .=
+        " Negara ini masih dapat dipertimbangkan dengan monitoring berkala.";
+
+
+    }
+
+
+    else{
+
+
+        $text .=
+        " Perlu kehati-hatian sebelum melakukan aktivitas perdagangan.";
+
+
+    }
+
+
+
+    return $text;
+
+}
 }
