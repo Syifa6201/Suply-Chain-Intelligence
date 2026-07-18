@@ -1,611 +1,510 @@
-{{-- ================= LIVE VESSEL MAP ================= --}}
+<div class="card card-custom shadow-sm">
 
-<div class="card card-custom shadow-sm border-0 mt-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
 
-<div class="card-header bg-white">
+        <div>
 
-<div class="d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-1">
+                🌍 Global Monitoring Map
+            </h4>
 
-Monitoring Country:
-{{ $focusCountry->name }}
+            <small class="text-muted">
+                Real-time Country, Port & Vessel Monitoring
+            </small>
 
-<div>
+        </div>
 
-<h4 class="mb-1">
-🌍 Global Vessel Intelligence Map
-</h4>
+        <div class="d-flex gap-2">
 
-<small class="text-muted">
-Real-time Global Shipping Monitoring
-</small>
+            <span class="badge bg-success">
+                LIVE
+            </span>
 
-</div>
+            <span class="badge bg-primary">
+                {{ $selectedCountry ?? 'Global' }}
+            </span>
 
+        </div>
 
-<div>
+        <button 
+id="resetMap"
+class="btn btn-primary btn-sm">
 
-<span class="badge bg-success px-3 py-2">
+🌍 World View
 
-● LIVE TRACKING
+</button>
 
-</span>
+    </div>
 
-</div>
+    <div class="card-body p-0 position-relative">
 
+        <div id="globalMap"></div>
 
-</div>
+        <div class="map-legend shadow">
 
-</div>
+            <h6 class="fw-bold mb-3">
+                Legend
+            </h6>
 
+            <div class="legend-item">
+                <span class="legend-circle bg-primary"></span>
+                Country
+            </div>
 
+            <div class="legend-item">
+                ⚓ Port
+            </div>
 
+            <div class="legend-item">
+                🚢 Vessel
+            </div>
 
-<div class="card-body">
+        </div>
 
-
-<div class="d-flex flex-wrap gap-2 mb-3">
-
-<span class="badge bg-primary">
-🚢 Sailing
-</span>
-
-<span class="badge bg-warning text-dark">
-📦 Loading
-</span>
-
-<span class="badge bg-success">
-⚓ Arrived
-</span>
-
-<span class="badge bg-danger">
-⚠ Delayed
-</span>
-
-
-</div>
-
-
-
-<div id="vesselMap"></div>
-
-
+    </div>
 
 </div>
 
+<style>
 
-</div>
+#globalMap{
+
+    width:100%;
+
+    height:700px;
+
+    border-radius:0 0 20px 20px;
+
+}
+
+.map-legend{
+
+    position:absolute;
+
+    right:20px;
+
+    bottom:20px;
+
+    background:#fff;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    min-width:180px;
+
+    z-index:1000;
+
+}
+
+.legend-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:10px;
+
+    font-size:14px;
+
+}
+
+.legend-circle{
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    display:inline-block;
+
+}
+
+.leaflet-popup-content{
+
+    min-width:220px;
+
+}
 
 
+    .country-marker{
+
+background:none;
+
+border:none;
+
+font-size:28px;
+
+}
 
 
-@php
+.port-marker{
+
+background:none;
+
+border:none;
+
+font-size:25px;
+
+}
 
 
-$vesselData = $vessels->map(function($v){
+.vessel-marker{
 
-return [
+background:none;
 
-'id'=>$v->id,
+border:none;
 
-'name'=>$v->name,
+font-size:25px;
 
-'imo'=>$v->imo,
+}
 
-'country'=>optional($v->country)->name,
+.port-marker{
 
-'latitude'=>(float)$v->latitude,
+background:white;
 
-'longitude'=>(float)$v->longitude,
+border-radius:50%;
 
-'destination'=>$v->destination,
+width:35px;
 
-'cargo'=>$v->cargo,
+height:35px;
 
-'speed'=>$v->speed,
+display:flex;
 
-'risk'=>$v->risk_score,
+align-items:center;
 
-'status'=>$v->status,
+justify-content:center;
 
-'heading'=>$v->heading,
+font-size:22px;
 
-'eta'=>optional($v->eta)?->format('d M Y')
+box-shadow:
+0 5px 15px rgba(0,0,0,.25);
 
-];
+}
 
+</style>
 
-});
-
-
-@endphp
-
-
-
-
-
+@push('scripts')
 
 <script>
 
-document.addEventListener(
-"DOMContentLoaded",
-function(){
+document.addEventListener("DOMContentLoaded",function(){
 
-
-
-if(typeof L === "undefined"){
-
-console.error("Leaflet belum aktif");
-
-return;
-
-}
-
-
-
-
-if(window.liveVesselMap){
-
-window.liveVesselMap.remove();
-
-}
-
-
-
-
-const map=L.map(
-"vesselMap",
-{
-worldCopyJump:true
-}
-);
-
-
-
-window.liveVesselMap=map;
-
-
-
-map.setView(
-[20,0],
+    const map = L.map('globalMap',{
+    zoomControl:true
+}).setView(
+[
+    20,
+    0
+],
 2
 );
 
 
 
+    L.tileLayer(
 
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
-L.tileLayer(
+        {
 
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            maxZoom:19,
 
-{
+            attribution:'© OpenStreetMap'
 
-maxZoom:18,
+        }
 
-attribution:"© OpenStreetMap"
-
-}
-
-).addTo(map);
-
+    ).addTo(map);
 
 
 
+    const countryLayer = L.layerGroup().addTo(map);
 
+    const portLayer = L.layerGroup().addTo(map);
 
-let vessels=@json($vesselData);
+    const vesselLayer = L.layerGroup().addTo(map);
 
+ // ICON MARKER
 
-let markers={};
+const countryIcon = L.divIcon({
 
-let trails={};
+    html:'📍',
 
+    className:'country-marker',
 
-
-
-
-
-function vesselIcon(status,heading){
-
-
-let emoji="🚢";
-
-
-if(status=="Loading"){
-
-emoji="📦";
-
-}
-
-
-if(status=="Arrived"){
-
-emoji="⚓";
-
-}
-
-
-if(status=="Delayed"){
-
-emoji="🚨";
-
-}
-
-
-
-
-
-return L.divIcon({
-
-className:"",
-
-html:`
-
-<div class="ship"
-
-style="
-transform:rotate(${heading}deg)
-">
-
-${emoji}
-
-</div>
-
-`,
-
-iconSize:[40,40],
-
-iconAnchor:[20,20]
-
+    iconSize:[30,30]
 
 });
 
 
+const portIcon = L.divIcon({
+
+    html:'⚓',
+
+    className:'port-marker',
+
+    iconSize:[30,30]
+
+});
+
+
+const vesselIcon = L.divIcon({
+
+    html:'🚢',
+
+    className:'vessel-marker',
+
+    iconSize:[30,30]
+
+});
+
+
+    @if(isset($focusCountry))
+
+
+const countryMarker = L.marker(
+
+[
+    {{ $focusCountry->latitude }},
+    {{ $focusCountry->longitude }}
+],
+
+{
+    icon:countryIcon
 }
 
+)
+
+.addTo(countryLayer);
 
 
 
+countryMarker.bindPopup(`
 
-
-function popup(v){
-
-
-return `
-
-<div style="width:260px">
+<div>
 
 <h5>
 
-🚢 ${v.name}
+🌍 {{ $focusCountry->name }}
 
 </h5>
 
-<hr>
 
+Capital:
 
-<b>IMO:</b>
-${v.imo}
+{{ $focusCountry->capital ?? '-' }}
+
 
 <br>
 
 
+Currency:
+
+{{ $focusCountry->currency ?? '-' }}
+
+
+</div>
+
+`);
+
+
+
+map.flyTo(
+
+[
+    {{ $focusCountry->latitude }},
+    {{ $focusCountry->longitude }}
+],
+
+6,
+
+{
+
+animate:true,
+
+duration:2
+
+}
+
+);
+
+
+
+@endif
+
+// ==========================
+// Port Marker
+// ==========================
+
+@foreach($ports as $port)
+
+@if($port->latitude && $port->longitude)
+
+L.marker([
+    {{ $port->latitude }},
+    {{ $port->longitude }}
+], {
+    icon: portIcon
+})
+.addTo(portLayer)
+.bindPopup(`
+    <div>
+        <h6>⚓ {{ $port->name }}</h6>
+
+        <hr>
+
+        <strong>Country :</strong>
+
+        {{ $port->country->name ?? '-' }}
+
+        <br>
+
+        <strong>Status :</strong>
+
+        Operational
+
+    </div>
+`);
+
+@endif
+
+@endforeach
+
+    const overlays={
+
+        "Countries":countryLayer,
+
+        "Ports":portLayer,
+
+        "Vessels":vesselLayer
+
+    };
+
+// =============================
+// PORT MARKER
+// =============================
+
+
+@foreach($ports as $port)
+
+
+@if($port->latitude && $port->longitude)
+
+
+L.marker(
+
+[
+
+{{ $port->latitude }},
+
+{{ $port->longitude }}
+
+],
+
+{
+
+icon:portIcon
+
+}
+
+)
+
+.addTo(portLayer)
+
+.bindPopup(`
+
+<div>
+
+<h6 class="fw-bold">
+
+⚓ {{ $port->name }}
+
+</h6>
+
+
+<hr>
+
+
 <b>Country:</b>
-${v.country ?? '-'}
+
+{{ $port->country->name ?? '-' }}
+
+<br>
+
+
+<b>Terminal:</b>
+
+{{ $port->terminal ?? '-' }}
+
+<br>
+
+
+<b>Type:</b>
+
+{{ $port->type ?? '-' }}
 
 <br>
 
 
 <b>Status:</b>
-${v.status}
+
+{{ $port->status ?? 'Normal' }}
 
 <br>
 
 
-<b>Speed:</b>
-${v.speed} Knot
+<b>Capacity:</b>
+
+{{ number_format($port->capacity ?? 0) }}
 
 <br>
 
 
-<b>Cargo:</b>
-${v.cargo}
+<b>Risk Score:</b>
 
-<br>
-
-
-<b>Destination:</b>
-${v.destination}
-
-<br>
-
-
-<b>Risk:</b>
-${v.risk}
-
-<br>
-
-
-<b>ETA:</b>
-${v.eta ?? '-'}
-
+{{ $port->risk_score ?? 0 }}
 
 </div>
 
-`;
+`);
 
-}
 
+@endif
 
 
+@endforeach
 
+    L.control.layers(null,overlays,{
 
+        collapsed:false
 
-function loadVessel(){
+    }).addTo(map);
 
-
-fetch(
-'/api/vessels/live?country={{ $focusCountry->id }}'
-)
-
-.then(res=>res.json())
-
-.then(result=>{
-
-
-if(!result.success){
-
-return;
-
-}
-
-
-
-result.data.forEach(v=>{
-
-
-
-let pos=[
-
-Number(v.latitude),
-
-Number(v.longitude)
-
-];
-
-
-
-
-
-if(markers[v.id]){
-
-
-markers[v.id]
-.setLatLng(pos);
-
-
-
-markers[v.id]
-.setIcon(
-vesselIcon(
-v.status,
-v.heading
-)
-);
-
-
-markers[v.id]
-.setPopupContent(
-popup(v)
-);
-
-
-
-trails[v.id]
-.addLatLng(pos);
-
-
-
-}
-
-else{
-
-
-
-let marker=L.marker(
-
-pos,
-
-{
-
-icon:vesselIcon(
-v.status,
-v.heading
-)
-
-}
-
-)
-
-.addTo(map);
-
-
-
-marker.bindPopup(
-popup(v)
-);
-
-
-
-markers[v.id]=marker;
-
-
-
-
-
-trails[v.id]=L.polyline(
-
-[pos],
-
-{
-
-color:"#2563eb",
-
-weight:2,
-
-opacity:.6
-
-}
-
-)
-
-.addTo(map);
-
-
-
-}
-
-
+    L.control.scale({
+    metric: true,
+    imperial: false
+}).addTo(map);
 
 });
 
 
+document
+.getElementById('resetMap')
+.onclick=function(){
 
-});
-
-
-}
-
-
-
-
-
-
-
-// initial data
-
-
-loadVessel();
-
-
-
-// update setiap 5 detik
-
-
-setInterval(
-
-loadVessel,
-
-5000
-
+map.flyTo(
+[
+20,
+0
+],
+2
 );
 
-
-
-
-
-// zoom aman
-
-setTimeout(()=>{
-
-map.invalidateSize();
-
-},500);
-
-
-
-});
-
+};
 </script>
 
+@endpush
 
-
-
-
-
-<style>
-
-
-#vesselMap{
-
-height:600px;
-
-border-radius:20px;
-
-overflow:hidden;
-
-}
-
-
-
-
-
-.ship{
-
-font-size:30px;
-
-animation:
-floatShip 1.5s infinite;
-
-
-filter:
-drop-shadow(
-0 3px 6px rgba(0,0,0,.35)
-);
-
-
-}
-
-
-
-
-
-@keyframes floatShip{
-
-
-0%{
-
-transform:translateY(0);
-
-}
-
-
-50%{
-
-transform:translateY(-6px);
-
-}
-
-
-100%{
-
-transform:translateY(0);
-
-}
-
-
-
-}
-
-
-
-
-
-.leaflet-popup-content{
-
-font-size:14px;
-
-}
-
-
-
-
-.card-custom{
-
-border-radius:22px;
-
-}
-
-
-
-</style>

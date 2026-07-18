@@ -2,59 +2,68 @@
 
     <div class="card-body">
 
-        <form method="GET">
+        <div class="row align-items-end">
 
-            <div class="row align-items-end">
+            <div class="col-lg-12">
 
-                <div class="col-lg-10">
+                <label class="form-label fw-bold">
 
-                    <label class="form-label">
+                    🌍 Select Monitoring Country
 
-                        Search Country
+                </label>
 
-                    </label>
+                <select
+                    id="countrySelect"
+                    class="form-select">
 
-                    <select
-                        class="form-select"
-                        name="country">
+                    <option value="">
+    🌍 -- Select Country --
+</option>
 
-                        <option value="">
 
-                            Select Country
+@foreach($countries as $country)
 
-                        </option>
+<option
+value="{{ $country->name }}"
 
-                        @foreach($countries as $country)
+@if(isset($selectedCountry) && $selectedCountry == $country->name)
 
-                            <option
-                                value="{{ $country->name }}"
-                                {{ $selectedCountry==$country->name?'selected':'' }}>
+selected
 
-                                {{ $country->name }}
+@endif
 
-                            </option>
+>
 
-                        @endforeach
+🌐 {{ $country->name }}
 
-                    </select>
+</option>
 
-                </div>
 
-                <div class="col-lg-2">
+@endforeach
 
-                    <button
-                        class="btn btn-primary w-100">
-
-                        Search
-
-                    </button>
-
-                </div>
+                </select>
 
             </div>
 
-        </form>
+        </div>
 
     </div>
 
 </div>
+
+<script>
+
+document
+.getElementById("countrySelect")
+.addEventListener("change",function(){
+
+    const country=this.value;
+
+    window.location.href=
+        "{{ route('global.index') }}" +
+        "?country=" +
+        encodeURIComponent(country);
+
+});
+
+</script>

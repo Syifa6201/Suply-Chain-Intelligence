@@ -66,5 +66,12 @@ public function recommendationHistories()
 
 }
 
+public function watchlists()
+{
+    return $this->hasMany(
+        Watchlist::class
+    );
+}
+
 
 }

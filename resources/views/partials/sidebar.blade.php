@@ -44,14 +44,29 @@ Global Monitor
 
 
 
-<a href="/"
-class="{{ request()->is('/') ? 'active-menu':'' }}">
+@if(session('user_role') == 'admin')
 
-<i class="bi bi-speedometer2"></i>
+<a href="{{ route('admin.dashboard') }}"
+class="{{ request()->routeIs('admin.dashboard') ? 'active-menu' : '' }}">
 
-Dashboard
+    <i class="bi bi-speedometer2"></i>
+
+    Dashboard
 
 </a>
+
+@else
+
+<a href="{{ route('dashboard') }}"
+class="{{ request()->routeIs('dashboard') ? 'active-menu' : '' }}">
+
+    <i class="bi bi-speedometer2"></i>
+
+    Dashboard
+
+</a>
+
+@endif
 
 
 </div>
@@ -285,6 +300,15 @@ Recommendation Engine
 
 Trade Prediction
 
+
+</a>
+
+<a href="{{ route('watchlist.index') }}"
+class="{{ request()->routeIs('watchlist.*') ? 'active-menu' : '' }}">
+
+    <i class="bi bi-star-fill"></i>
+
+    Watchlist
 
 </a>
 

@@ -779,7 +779,7 @@ AI
 <div class="menu">
 
 
-<a href="/">
+<a href="/dashboard">
 
 {{ __('messages.dashboard') }}
 
@@ -799,6 +799,11 @@ AI
 
 </a>
 
+<a href="/weather">
+
+Weather
+
+</a>
 
 <a href="/economy">
 
@@ -842,13 +847,6 @@ Logout
 
 </form>
 </div>
-
-
-<a href="{{route('settings.index')}}">
-
-<i class="bi bi-gear"></i>
-
-</a>
 
 
 

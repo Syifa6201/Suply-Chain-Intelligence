@@ -48,4 +48,18 @@ public function isAdmin()
 return $this->role === 'admin';
 
 }
+
+public function watchlists()
+{
+    return $this->hasMany(
+        Watchlist::class
+    );
+}
+
+public function setting()
+{
+    return $this->hasOne(
+        Setting::class
+    );
+}
 }

@@ -10,28 +10,68 @@
 
         <div class="d-flex align-items-center">
 
-            <img
-                src="{{ $info['flag'] }}"
-                width="65"
-                class="rounded shadow me-3">
+    <img
+        src="{{ $info['flag'] }}"
+        width="80"
+        class="rounded shadow me-4">
 
-            <div>
 
-                <h2 class="fw-bold mb-0">
+    <div>
 
-                    {{ $country }}
 
-                </h2>
+        <h1 class="fw-bold mb-1">
 
-                <small class="text-muted">
+            {{ $country }}
 
-                    Global Supply Chain Intelligence Dashboard
+        </h1>
 
-                </small>
 
-            </div>
+        <p class="text-muted mb-2">
+
+            🌍 Global Supply Chain Intelligence Dashboard
+
+        </p>
+
+
+
+        <div class="d-flex gap-2 flex-wrap">
+
+
+            <span class="badge bg-primary">
+
+                🌐 {{ $info['region'] ?? 'Global Market' }}
+
+            </span>
+
+
+            <span class="badge bg-success">
+
+                💱 {{ $currency['currency'] ?? '-' }}
+
+            </span>
+
+
+            <span class="badge bg-warning text-dark">
+
+                🏛 {{ $info['capital'] ?? '-' }}
+
+            </span>
+
+
+            <span class="badge bg-dark">
+
+                📡 Live Monitoring
+
+            </span>
+
 
         </div>
+
+
+    </div>
+
+
+</div>
 
         <span class="badge bg-success px-4 py-2 fs-6">
 
@@ -49,97 +89,250 @@
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="card shadow border-0 h-100">
+            <div class="card score-card shadow border-0 h-100">
 
-                <div class="card-body text-center">
+<div class="card-body">
 
-                    <small class="text-muted">
 
-                        Supply Chain Score
+<div class="d-flex justify-content-between">
 
-                    </small>
 
-                    <h1 class="text-primary mt-3">
+<small class="text-muted">
 
-                        {{ $supplyScore['overall'] }}/100
+🚢 Supply Chain Score
 
-                    </h1>
+</small>
 
-                </div>
 
-            </div>
+<span class="badge bg-primary">
 
-        </div>
+AI Score
 
-        <div class="col-lg-3 col-md-6">
+</span>
 
-            <div class="card shadow border-0 h-100">
 
-                <div class="card-body text-center">
+</div>
 
-                    <small class="text-muted">
 
-                        Economic Stability
 
-                    </small>
+<h1 class="text-primary mt-3">
 
-                    <h1 class="text-success mt-3">
+{{ $supplyScore['overall'] }}/100
 
-                        {{ $supplyScore['economic'] }}/100
+</h1>
 
-                    </h1>
 
-                </div>
 
-            </div>
+<div class="progress mt-3">
 
-        </div>
 
-        <div class="col-lg-3 col-md-6">
+<div class="progress-bar bg-primary"
 
-            <div class="card shadow border-0 h-100">
+style="width:{{ $supplyScore['overall'] }}%">
 
-                <div class="card-body text-center">
+</div>
 
-                    <small class="text-muted">
 
-                        Logistics
+</div>
 
-                    </small>
 
-                    <h1 class="text-warning mt-3">
 
-                        {{ $supplyScore['logistics'] }}/100
+<small class="text-muted mt-3 d-block">
 
-                    </h1>
 
-                </div>
+Overall country supply chain performance
 
-            </div>
+
+</small>
+
+
+</div>
+
+</div>
 
         </div>
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="card shadow border-0 h-100">
+            <div class="card score-card shadow border-0 h-100">
 
-                <div class="card-body text-center">
+<div class="card-body">
 
-                    <small class="text-muted">
 
-                        Market Opportunity
+<div class="d-flex justify-content-between">
 
-                    </small>
 
-                    <h1 class="text-info mt-3">
+<small class="text-muted">
 
-                        {{ $supplyScore['market'] }}/100
+📈 Economic Stability
 
-                    </h1>
+</small>
 
-                </div>
 
-            </div>
+<span class="badge bg-success">
+
+Economy
+
+</span>
+
+
+</div>
+
+
+
+<h1 class="text-success mt-3">
+
+{{ $supplyScore['economic'] }}/100
+
+</h1>
+
+
+<div class="progress mt-3">
+
+
+<div class="progress-bar bg-success"
+
+style="width:{{ $supplyScore['economic'] }}%">
+
+</div>
+
+
+</div>
+
+
+
+<small class="text-muted mt-3 d-block">
+
+Based on GDP, inflation and economic data
+
+</small>
+
+
+
+</div>
+
+</div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card score-card shadow border-0 h-100">
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<small class="text-muted">
+
+⚓ Logistics Performance
+
+</small>
+
+
+<span class="badge bg-warning text-dark">
+
+Logistics
+
+</span>
+
+
+</div>
+
+
+<h1 class="text-warning mt-3">
+
+{{ $supplyScore['logistics'] }}/100
+
+</h1>
+
+
+
+<div class="progress mt-3">
+
+
+<div class="progress-bar bg-warning"
+
+style="width:{{ $supplyScore['logistics'] }}%">
+
+</div>
+
+
+</div>
+
+
+<small class="text-muted mt-3 d-block">
+
+Based on ports and transportation
+
+</small>
+
+
+</div>
+
+</div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card score-card shadow border-0 h-100">
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<small class="text-muted">
+
+🌎 Market Opportunity
+
+</small>
+
+
+<span class="badge bg-info">
+
+Market
+
+</span>
+
+
+</div>
+
+
+<h1 class="text-info mt-3">
+
+{{ $supplyScore['market'] }}/100
+
+</h1>
+
+
+<div class="progress mt-3">
+
+
+<div class="progress-bar bg-info"
+
+style="width:{{ $supplyScore['market'] }}%">
+
+</div>
+
+
+</div>
+
+
+<small class="text-muted mt-3 d-block">
+
+Based on population and trade potential
+
+</small>
+
+
+</div>
+
+</div>
 
         </div>
 
@@ -149,373 +342,826 @@
 
     {{-- ================= AI EXECUTIVE SUMMARY ================= --}}
 
-    <div class="card shadow border-0 mb-4">
+<div class="card shadow border-0 mb-4">
 
-        <div class="card-body">
 
-            <h4>
+<div class="card-body">
 
-                🤖 AI Executive Insight
 
-            </h4>
+<h4 class="fw-bold">
 
-            <hr>
+🤖 AI Executive Insight
 
-            <p class="mb-0">
+</h4>
 
-                <strong>{{ $country }}</strong>
 
-                currently has
+<hr>
 
-                <strong>{{ strtolower($risk['status']) }}</strong>
 
-                supply chain risk.
 
-                Current inflation is
+<div class="row g-4">
 
-                <strong>
 
-                    {{ number_format($statistics['inflation'] ?? 0,2) }}%
 
-                </strong>
+{{-- Risk Summary --}}
 
-                with total export value reaching
+<div class="col-lg-4">
 
-                <strong>
 
-                    ${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
+<div class="ai-box">
 
-                </strong>
 
-                and import
+<h6>
 
-                <strong>
+⚠ Supply Chain Risk
 
-                    ${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B.
+</h6>
 
-                </strong>
 
-                Based on the latest economic indicators, this country is categorized as
+<h3 class="text-{{ $risk['color'] }}">
 
-                <strong>
+{{ strtoupper($risk['status']) }}
 
-                    {{ $tradeAnalysis['status'] }}
+</h3>
 
-                </strong>
 
-                for international trade.
+<p>
 
-            </p>
+AI evaluates current supply chain condition based on:
 
-        </div>
+</p>
 
-    </div>
+
+<ul>
+
+<li>
+
+Economic stability
+
+</li>
+
+
+<li>
+
+Market condition
+
+</li>
+
+
+<li>
+
+Logistics performance
+
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{{-- Economic Analysis --}}
+
+<div class="col-lg-4">
+
+
+<div class="ai-box">
+
+
+<h6>
+
+📈 Economic Analysis
+
+</h6>
+
+
+<p>
+
+
+{{ $country }}
+
+has inflation rate:
+
+
+<strong>
+
+{{ number_format($statistics['inflation'] ?? 0,2) }}%
+
+</strong>
+
+
+</p>
+
+
+<p>
+
+
+GDP:
+
+<strong>
+
+${{ number_format(($statistics['gdp'] ?? 0)/1000000000,2) }} B
+
+</strong>
+
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{{-- Trade Decision --}}
+
+<div class="col-lg-4">
+
+
+<div class="ai-box">
+
+
+<h6>
+
+🤖 AI Recommendation
+
+</h6>
+
+
+
+<h4>
+
+
+@if($tradeAnalysis['status']=="Surplus")
+
+
+<span class="text-success">
+
+Trade Opportunity
+
+</span>
+
+
+@elseif($tradeAnalysis['status']=="Deficit")
+
+
+<span class="text-warning">
+
+Monitor Trade
+
+</span>
+
+
+@else
+
+
+<span>
+
+Analyze Market
+
+</span>
+
+
+@endif
+
+
+</h4>
+
+
+<p>
+
+Based on export, import and economic indicators.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
 
     {{-- ================= REALTIME OVERVIEW ================= --}}
 
 <div class="row g-4 mb-4">
 
     {{-- Temperature --}}
-    <div class="col-lg-3 col-md-6">
+<div class="col-lg-3 col-md-6">
 
-        <div class="card shadow border-0 h-100">
 
-            <div class="card-body">
+<div class="card intelligence-card shadow border-0 h-100">
 
-                <small class="text-muted">
 
-                    🌡 Temperature
+<div class="card-body">
 
-                </small>
 
-                <h2 class="mt-2">
+<div class="d-flex justify-content-between">
 
-                    {{ $weather['current']['temperature_2m'] ?? '-' }} °C
 
-                </h2>
+<small class="text-muted">
 
-                <small>
+🌡 Climate Condition
 
-                    Wind
+</small>
 
-                    {{ $weather['current']['wind_speed_10m'] ?? '-' }}
 
-                    km/h
+<span class="badge bg-info">
 
-                </small>
+LIVE
 
-            </div>
+</span>
 
-        </div>
 
-    </div>
+</div>
+
+
+
+<h2 class="mt-3">
+
+{{ $weather['current']['temperature_2m'] ?? '-' }}°C
+
+</h2>
+
+
+
+<p class="text-muted mb-2">
+
+Wind
+
+{{ $weather['current']['wind_speed_10m'] ?? '-' }}
+
+km/h
+
+</p>
+
+
+
+<span class="badge bg-success">
+
+Weather Stable
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
 
 
 
     {{-- GDP --}}
     <div class="col-lg-3 col-md-6">
 
-        <div class="card shadow border-0 h-100">
 
-            <div class="card-body">
+<div class="card intelligence-card shadow border-0 h-100">
 
-                @php
 
-                    $gdp = $economy[1][0]['value'] ?? null;
+<div class="card-body">
 
-                @endphp
 
-                <small class="text-muted">
+<div class="d-flex justify-content-between align-items-center">
 
-                    💰 GDP
 
-                </small>
+<div>
 
-                <h2 class="mt-2">
+<small class="text-muted">
 
-                    @if($gdp)
+💰 Economic Power
 
-                        ${{ number_format($gdp/1000000000000,2) }} T
+</small>
 
-                    @else
 
-                        -
+<h2 class="fw-bold mt-3">
 
-                    @endif
 
-                </h2>
+@php
 
-                <small>
+$gdpValue = $economy[1][0]['value'] ?? 0;
 
-                    World Bank
+@endphp
 
-                </small>
 
-            </div>
+${{ number_format($gdpValue/1000000000,2) }} B
 
-        </div>
 
-    </div>
+</h2>
 
-
-
-    {{-- Currency --}}
-    <div class="col-lg-3 col-md-6">
-
-        <div class="card shadow border-0 h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    💱 Currency
-
-                </small>
-
-                <h2 class="mt-2">
-
-                    {{ $currency['currency'] ?? '-' }}
-
-                </h2>
-
-                <div>
-
-                    1 USD =
-
-                    <b>
-
-                        {{ number_format($currency['rate'] ?? 0,2) }}
-
-                        {{ $currency['currency'] ?? '' }}
-
-                    </b>
-
-                </div>
-
-                <span class="badge bg-{{ $currency['color'] ?? 'secondary' }} mt-2">
-
-                    {{ $currency['status'] ?? 'Unknown' }}
-
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    {{-- Risk --}}
-    <div class="col-lg-3 col-md-6">
-
-        <div class="card shadow border-0 h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    ⚠ AI Risk Analysis
-
-                </small>
-
-                <h2 class="text-{{ $risk['color'] }} mt-2">
-
-                    {{ $risk['status'] }}
-
-                </h2>
-
-                <div>
-
-                    Score
-
-                    <b>
-
-                        {{ $risk['score'] }}/100
-
-                    </b>
-
-                </div>
-
-                <hr>
-
-                <small class="text-muted">
-
-                    Risk Factors
-
-                </small>
-
-                <ul class="small mb-0 mt-2">
-
-                    @forelse(($risk['reasons'] ?? []) as $reason)
-
-                        <li>
-
-                            {{ $reason }}
-
-                        </li>
-
-                    @empty
-
-                        <li>
-
-                            No significant risk detected
-
-                        </li>
-
-                    @endforelse
-
-                </ul>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>
 
 
 
-{{-- ================= COUNTRY STATISTICS ================= --}}
+<span class="icon-box bg-success">
+
+📈
+
+</span>
+
+
+</div>
+
+
+
+<p class="text-muted">
+
+{{ $country }} GDP Performance
+
+</p>
+
+
+
+<div class="progress mt-3">
+
+
+<div class="progress-bar bg-success"
+
+style="width:85%">
+
+</div>
+
+
+</div>
+
+
+
+<div class="mt-3">
+
+
+<span class="badge bg-success">
+
+Strong Economic Indicator
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+    {{-- Currency --}}
+    <div class="col-lg-3 col-md-6">
+
+
+<div class="card intelligence-card shadow border-0 h-100">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<small class="text-muted">
+
+💱 Currency
+
+</small>
+
+
+<span class="badge bg-primary">
+
+FX
+
+</span>
+
+
+</div>
+
+
+
+<h2 class="mt-3">
+
+{{ $currency['currency'] ?? '-' }}
+
+</h2>
+
+
+
+<p>
+
+1 USD =
+
+<strong>
+
+{{ number_format($currency['rate'] ?? 0,2) }}
+
+</strong>
+
+</p>
+
+
+
+<span class="badge bg-{{ $currency['color'] ?? 'secondary' }}">
+
+{{ $currency['status'] ?? 'Unknown' }}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+    {{-- Risk --}}
+  <div class="col-lg-3 col-md-6">
+
+
+<div class="card intelligence-card shadow border-0 h-100">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<small class="text-muted">
+
+⚠ AI Risk Engine
+
+</small>
+
+
+<span class="badge bg-danger">
+
+AI
+
+</span>
+
+
+</div>
+
+
+
+<h2 class="text-{{ $risk['color'] }} mt-3">
+
+{{ $risk['status'] }}
+
+</h2>
+
+
+
+<div class="progress mt-3">
+
+
+<div class="progress-bar bg-{{ $risk['color'] }}"
+
+style="width:{{ $risk['score'] }}%">
+
+</div>
+
+
+</div>
+
+
+
+<p class="mt-2">
+
+Risk Score:
+
+<strong>
+
+{{ $risk['score'] }}/100
+
+</strong>
+
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+{{-- ================= COUNTRY ECONOMIC INTELLIGENCE ================= --}}
 
 <div class="row g-4 mb-4">
 
-    <div class="col-lg-3 col-md-6">
 
-        <div class="card shadow border-0">
+{{-- Inflation --}}
 
-            <div class="card-body text-center">
+<div class="col-lg-3 col-md-6">
 
-                <small class="text-muted">
+<div class="card intelligence-card shadow border-0 h-100">
 
-                    📈 Inflation
 
-                </small>
+<div class="card-body">
 
-                <h3 class="mt-2">
 
-                    {{ number_format($statistics['inflation'] ?? 0,2) }}%
+<div class="d-flex justify-content-between">
 
-                </h3>
 
-            </div>
+<span class="text-muted">
 
-        </div>
+📈 Inflation
 
-    </div>
+</span>
 
-    <div class="col-lg-3 col-md-6">
 
-        <div class="card shadow border-0">
+<span class="badge bg-danger">
 
-            <div class="card-body text-center">
+Economy
 
-                <small class="text-muted">
+</span>
 
-                    👥 Population
 
-                </small>
+</div>
 
-                <h3 class="mt-2">
 
-                    {{ number_format($statistics['population'] ?? 0) }}
 
-                </h3>
+<h2 class="mt-3 fw-bold">
 
-            </div>
+{{ number_format($statistics['inflation'] ?? 0,2) }}%
 
-        </div>
+</h2>
 
-    </div>
 
-    <div class="col-lg-3 col-md-6">
 
-        <div class="card shadow border-0">
+<p class="text-muted">
 
-            <div class="card-body text-center">
+Price stability indicator
 
-                <small class="text-muted">
+</p>
 
-                    📦 Export
 
-                </small>
 
-                <h3 class="mt-2">
+@if(($statistics['inflation'] ?? 0) > 5)
 
-                    ${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
+<span class="badge bg-danger">
 
-                </h3>
+High Pressure
 
-            </div>
+</span>
 
-        </div>
+@else
 
-    </div>
+<span class="badge bg-success">
 
-    <div class="col-lg-3 col-md-6">
+Stable
 
-        <div class="card shadow border-0">
+</span>
 
-            <div class="card-body text-center">
+@endif
 
-                <small class="text-muted">
 
-                    📥 Import
+</div>
 
-                </small>
+</div>
 
-                <h3 class="mt-2">
+</div>
 
-                    ${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B
 
-                </h3>
 
-            </div>
 
-        </div>
 
-    </div>
+{{-- Population --}}
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card intelligence-card shadow border-0 h-100">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted">
+
+👥 Population
+
+</span>
+
+
+<span class="badge bg-primary">
+
+Market
+
+</span>
+
+
+</div>
+
+
+
+<h2 class="mt-3 fw-bold">
+
+
+{{ number_format($statistics['population'] ?? 0) }}
+
+
+</h2>
+
+
+
+<p class="text-muted">
+
+Consumer market potential
+
+</p>
+
+
+<span class="badge bg-primary">
+
+Demand Indicator
+
+</span>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+{{-- Export --}}
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card intelligence-card shadow border-0 h-100">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted">
+
+📦 Export
+
+</span>
+
+
+<span class="badge bg-success">
+
+Trade
+
+</span>
+
+
+</div>
+
+
+
+<h2 class="mt-3 fw-bold">
+
+
+${{ number_format(($statistics['export'] ?? 0)/1000000000,2) }} B
+
+
+</h2>
+
+
+
+<p class="text-muted">
+
+International trade strength
+
+</p>
+
+
+<span class="badge bg-success">
+
+Export Capability
+
+</span>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+{{-- Import --}}
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card intelligence-card shadow border-0 h-100">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted">
+
+📥 Import
+
+</span>
+
+
+<span class="badge bg-warning text-dark">
+
+Demand
+
+</span>
+
+
+</div>
+
+
+
+<h2 class="mt-3 fw-bold">
+
+
+${{ number_format(($statistics['import'] ?? 0)/1000000000,2) }} B
+
+
+</h2>
+
+
+
+<p class="text-muted">
+
+Import dependency level
+
+</p>
+
+
+<span class="badge bg-warning text-dark">
+
+Market Demand
+
+</span>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
 
 </div>
 
@@ -564,52 +1210,106 @@
 
             <div class="card-body">
 
-                <h4>
+                <h4 class="fw-bold">
 
-                    📰 Latest News
+📰 Latest News Intelligence
 
-                </h4>
+</h4>
 
-                <hr>
 
-                @forelse(($news['articles'] ?? []) as $article)
+<p class="text-muted">
 
-                    <div class="mb-4">
+AI monitoring news impact for {{ $country }}
 
-                        <a
-                            href="{{ $article['url'] }}"
-                            target="_blank"
-                            class="fw-bold text-decoration-none">
+</p>
 
-                            {{ $article['title'] }}
 
-                        </a>
+<hr>
 
-                        <br>
 
-                        <small class="text-muted">
 
-                            {{ $article['source']['name'] ?? '-' }}
+@forelse(($news['articles'] ?? []) as $article)
 
-                            •
 
-                            {{ $article['publishedAt'] ?? '' }}
+<div class="news-card mb-3">
 
-                        </small>
 
-                    </div>
+<div class="d-flex justify-content-between">
 
-                    <hr>
 
-                @empty
+<div>
 
-                    <div class="text-center text-muted py-5">
 
-                        No news available
+<h6 class="fw-bold">
 
-                    </div>
+{{ $article['title'] }}
 
-                @endforelse
+</h6>
+
+
+<small class="text-muted">
+
+{{ $article['source']['name'] ?? 'Global News' }}
+
+•
+
+{{ $article['publishedAt'] ?? '' }}
+
+</small>
+
+
+</div>
+
+
+<span class="badge bg-primary">
+
+AI Scan
+
+</span>
+
+
+</div>
+
+
+
+<p class="mt-2 text-muted small">
+
+Supply chain impact analysis generated from latest information.
+
+</p>
+
+
+
+<a
+
+href="{{ $article['url'] }}"
+
+target="_blank"
+
+class="btn btn-sm btn-outline-primary">
+
+
+Read News
+
+
+</a>
+
+
+</div>
+
+
+
+@empty
+
+
+<div class="text-center text-muted py-5">
+
+No news available for this country.
+
+</div>
+
+
+@endforelse
 
             </div>
 
@@ -659,21 +1359,85 @@
 
 <div class="card-body">
 
-<h4>
+<h4 class="fw-bold">
 
-🤖 AI Recommendation
+🤖 AI Trade Recommendation
 
 </h4>
 
+
 <hr>
 
-<h3 class="text-{{ $recommendation['color'] }}">
+
+<div class="text-center">
+
+
+<h2 class="text-{{ $recommendation['color'] }}">
 
 {{ $recommendation['title'] }}
 
-</h3>
+</h2>
 
-<ul class="mt-3">
+
+
+<p class="text-muted">
+
+AI decision based on:
+
+</p>
+
+
+<div class="d-flex justify-content-center gap-2 flex-wrap">
+
+
+<span class="badge bg-primary">
+
+Economic
+
+</span>
+
+
+<span class="badge bg-success">
+
+Logistics
+
+</span>
+
+
+<span class="badge bg-warning text-dark">
+
+Trade
+
+</span>
+
+
+<span class="badge bg-info">
+
+Market
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<hr>
+
+
+
+<h6>
+
+Recommended Action:
+
+</h6>
+
+
+<ul>
+
 
 @forelse(($recommendation['reasons'] ?? []) as $reason)
 
@@ -683,15 +1447,17 @@
 
 </li>
 
+
 @empty
 
 <li>
 
-No recommendation.
+No recommendation available.
 
 </li>
 
 @endforelse
+
 
 </ul>
 
@@ -709,81 +1475,253 @@ No recommendation.
 
 <div class="card-body">
 
-<h4>
+<h4 class="fw-bold">
 
 📦 Trade Intelligence
 
 </h4>
 
+
+<p class="text-muted">
+
+AI analysis for {{ $country }} international trade condition
+
+</p>
+
+
 <hr>
 
-<div class="text-center">
 
-<h2 class="text-{{ $tradeAnalysis['color'] }}">
+
+<div class="row g-3">
+
+
+
+{{-- Trade Status --}}
+
+<div class="col-md-6">
+
+
+<div class="trade-box">
+
+
+<small class="text-muted">
+
+Current Status
+
+</small>
+
+
+<h3 class="text-{{ $tradeAnalysis['color'] }} mt-2">
+
 
 {{ $tradeAnalysis['status'] }}
 
-</h2>
+
+</h3>
+
 
 </div>
 
-<table class="table mt-4">
 
-<tr>
+</div>
 
-<th>Export</th>
 
-<td>
 
-${{ number_format(($tradeAnalysis['export'] ?? 0)/1000000000,2) }}
 
-B
+{{-- Trade Balance --}}
 
-</td>
+<div class="col-md-6">
 
-</tr>
 
-<tr>
+<div class="trade-box">
 
-<th>Import</th>
 
-<td>
+<small class="text-muted">
 
-${{ number_format(($tradeAnalysis['import'] ?? 0)/1000000000,2) }}
+Trade Balance
 
-B
+</small>
 
-</td>
 
-</tr>
+<h3 class="mt-2">
 
-<tr>
 
-<th>Trade Balance</th>
+${{ number_format(($tradeAnalysis['balance'] ?? 0)/1000000000,2) }} B
 
-<td>
 
-${{ number_format(($tradeAnalysis['balance'] ?? 0)/1000000000,2) }}
+</h3>
 
-B
 
-</td>
+</div>
 
-</tr>
 
-<tr>
+</div>
 
-<th>Recommendation</th>
 
-<td>
 
-{{ $tradeAnalysis['status'] }}
 
-</td>
+{{-- Export --}}
 
-</tr>
+<div class="col-md-6">
 
-</table>
+
+<div class="trade-box">
+
+
+<small class="text-muted">
+
+📦 Export Strength
+
+</small>
+
+
+<h3 class="text-success mt-2">
+
+
+${{ number_format(($tradeAnalysis['export'] ?? 0)/1000000000,2) }} B
+
+
+</h3>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{{-- Import --}}
+
+<div class="col-md-6">
+
+
+<div class="trade-box">
+
+
+<small class="text-muted">
+
+📥 Import Dependency
+
+</small>
+
+
+<h3 class="text-warning mt-2">
+
+
+${{ number_format(($tradeAnalysis['import'] ?? 0)/1000000000,2) }} B
+
+
+</h3>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+<hr>
+
+
+
+<h6 class="fw-bold">
+
+🤖 AI Action Plan
+
+</h6>
+
+
+
+<ul class="mt-3">
+
+
+@if($tradeAnalysis['status']=="Surplus")
+
+
+<li>
+
+Increase export partnership opportunity
+
+</li>
+
+
+<li>
+
+Explore new international buyers
+
+</li>
+
+
+<li>
+
+Optimize logistics routes
+
+</li>
+
+
+
+@elseif($tradeAnalysis['status']=="Deficit")
+
+
+<li>
+
+Review import dependency
+
+</li>
+
+
+<li>
+
+Search alternative suppliers
+
+</li>
+
+
+<li>
+
+Monitor currency fluctuation
+
+</li>
+
+
+
+@else
+
+
+<li>
+
+Analyze market potential
+
+</li>
+
+
+<li>
+
+Monitor trade condition
+
+</li>
+
+
+<li>
+
+Evaluate business risk
+
+</li>
+
+
+@endif
+
+
+</ul>
 
 </div>
 
@@ -803,81 +1741,146 @@ B
 
             <div class="card-body">
 
-                <h4>
+                <h4 class="fw-bold">
 
-                    ⚓ Major Ports
+⚓ Port Intelligence
 
-                </h4>
+</h4>
 
-                <hr>
 
-                @forelse($ports as $port)
+<p class="text-muted">
 
-                    <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+Major logistics gateway for {{ $country }}
 
-                        <div>
+</p>
 
-                            <h6 class="mb-1">
 
-                                {{ $port->name }}
+<hr>
 
-                            </h6>
 
-                            <small class="text-muted">
 
-                                {{ $port->city }}
+@forelse($ports as $port)
 
-                            </small>
 
-                        </div>
+<div class="port-card mb-3">
 
-                        <div>
 
-                            @php
+<div class="d-flex justify-content-between align-items-center">
 
-                                $status = $port->current_status ?? 'Normal';
 
-                            @endphp
+<div>
 
-                            @if($status=="Normal")
 
-                                <span class="badge bg-success">
+<h6 class="fw-bold mb-1">
 
-                                    Normal
+{{ $port->name }}
 
-                                </span>
+</h6>
 
-                            @elseif($status=="Delay")
 
-                                <span class="badge bg-warning">
+<small class="text-muted">
 
-                                    Delay
+📍 {{ $port->city }}
 
-                                </span>
+</small>
 
-                            @else
 
-                                <span class="badge bg-danger">
+</div>
 
-                                    Congested
 
-                                </span>
 
-                            @endif
+<div>
 
-                        </div>
 
-                    </div>
+@php
 
-                @empty
+$status = $port->current_status ?? 'Normal';
 
-                    <div class="text-center py-5 text-muted">
+@endphp
 
-                        No port information available.
 
-                    </div>
 
-                @endforelse
+@if($status=="Normal")
+
+<span class="badge bg-success">
+
+🟢 Normal
+
+</span>
+
+
+@elseif($status=="Delay")
+
+
+<span class="badge bg-warning text-dark">
+
+🟡 Delay
+
+</span>
+
+
+@else
+
+
+<span class="badge bg-danger">
+
+🔴 Congested
+
+</span>
+
+
+@endif
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="mt-3">
+
+
+<small class="text-muted">
+
+Capacity
+
+</small>
+
+
+<div class="progress">
+
+
+<div class="progress-bar bg-primary"
+
+style="width:{{ min(($port->capacity ?? 0)/10000000*100,100) }}%">
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+@empty
+
+
+<div class="text-center text-muted py-5">
+
+No port information available
+
+</div>
+
+
+@endforelse
 
             </div>
 
@@ -893,55 +1896,102 @@ B
 
             <div class="card-body">
 
-                <h4>
+                <h4 class="fw-bold">
 
-                    🚢 Port Performance
+🚢 Port Performance Analysis
 
-                </h4>
+</h4>
 
-                <hr>
 
-                <table class="table">
+<hr>
 
-                    <tr>
 
-                        <th>Status</th>
 
-                        <td>
+<div class="text-center mb-4">
 
-                            {{ $portSummary['status'] ?? '-' }}
 
-                        </td>
+<h1 class="text-primary">
 
-                    </tr>
 
-                    <tr>
+{{ count($ports) }}
 
-                        <th>Congestion</th>
+</h1>
 
-                        <td>
 
-                            {{ $portSummary['congestion'] ?? 0 }} %
+<p class="text-muted">
 
-                        </td>
+Active Port Monitoring
 
-                    </tr>
+</p>
 
-                    <tr>
 
-                        <th>Total Capacity</th>
+</div>
 
-                        <td>
 
-                            {{ number_format($portSummary['capacity'] ?? 0) }}
 
-                            TEU
+<div class="port-stat">
 
-                        </td>
 
-                    </tr>
+<span>
 
-                </table>
+⚓ Total Capacity
+
+</span>
+
+
+<strong>
+
+{{ number_format($portSummary['capacity'] ?? 0) }}
+
+TEU
+
+</strong>
+
+
+</div>
+
+
+
+<div class="port-stat">
+
+
+<span>
+
+🚦 Current Status
+
+</span>
+
+
+<strong>
+
+{{ $portSummary['status'] ?? '-' }}
+
+</strong>
+
+
+</div>
+
+
+
+
+<div class="port-stat">
+
+
+<span>
+
+🚧 Congestion Level
+
+</span>
+
+
+<strong>
+
+{{ $portSummary['congestion'] ?? 0 }}%
+
+</strong>
+
+
+</div>
 
             </div>
 
@@ -1088,3 +2138,249 @@ document.addEventListener("DOMContentLoaded",function(){
 </div>
 
 @endsection
+
+<style>
+
+.score-card{
+
+border-radius:20px;
+
+transition:.3s;
+
+}
+
+
+.score-card:hover{
+
+transform:translateY(-8px);
+
+}
+
+
+.progress{
+
+height:8px;
+
+border-radius:20px;
+
+}
+
+
+.progress-bar{
+
+border-radius:20px;
+
+}
+
+.ai-box{
+
+background:#f8fafc;
+
+padding:20px;
+
+border-radius:18px;
+
+height:100%;
+
+border-left:5px solid #0d6efd;
+
+}
+
+
+.ai-box h6{
+
+font-weight:700;
+
+margin-bottom:15px;
+
+}
+
+
+.ai-box p{
+
+color:#64748b;
+
+font-size:14px;
+
+}
+
+
+.ai-box li{
+
+margin-bottom:5px;
+
+}
+
+.intelligence-card{
+
+border-radius:22px;
+
+transition:.3s;
+
+}
+
+
+intelligence-card:hover{
+
+transform:translateY(-6px);
+
+}
+
+
+.intelligence-card h2{
+
+font-weight:800;
+
+}
+
+
+.progress{
+
+height:8px;
+
+border-radius:20px;
+
+}
+
+.icon-box{
+
+width:45px;
+
+height:45px;
+
+border-radius:15px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+}
+
+.intelligence-card{
+
+border-radius:22px;
+
+transition:.3s;
+
+}
+
+
+.intelligence-card:hover{
+
+transform:translateY(-6px);
+
+}
+
+
+.intelligence-card h2{
+
+font-weight:800;
+
+}
+
+.news-card{
+
+background:#f8fafc;
+
+padding:18px;
+
+border-radius:18px;
+
+border-left:5px solid #0d6efd;
+
+transition:.3s;
+
+}
+
+
+.news-card:hover{
+
+transform:translateX(5px);
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+
+.news-card h6{
+
+line-height:1.5;
+
+}
+
+.trade-box{
+
+background:#f8fafc;
+
+padding:18px;
+
+border-radius:18px;
+
+height:120px;
+
+border-left:5px solid #0d6efd;
+
+transition:.3s;
+
+}
+
+
+.trade-box:hover{
+
+transform:translateY(-5px);
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.port-card{
+
+background:#f8fafc;
+
+padding:18px;
+
+border-radius:18px;
+
+border-left:5px solid #0d6efd;
+
+transition:.3s;
+
+}
+
+
+.port-card:hover{
+
+transform:translateX(5px);
+
+}
+
+
+
+.port-stat{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:15px;
+
+margin-bottom:10px;
+
+background:#f8fafc;
+
+border-radius:15px;
+
+}
+
+
+.port-stat span{
+
+color:#64748b;
+
+}
+
+</style>

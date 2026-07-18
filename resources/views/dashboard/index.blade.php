@@ -267,6 +267,14 @@ Trade Prediction
 
 </a>
 
+<a href="{{ route('watchlist.index') }}" class="dashboard-menu">
+
+    <i class="bi bi-star-fill"></i>
+
+    Watchlist
+
+</a>
+
 
 
 </div>
@@ -289,26 +297,14 @@ Trade Prediction
 </h4>
 
 
+<a href="{{ route('settings.index') }}" class="dashboard-menu">
 
-<a href="#"
-class="dashboard-menu">
+    <i class="bi bi-gear"></i>
 
-<i class="bi bi-bookmark-star"></i>
-
-Watchlist
+    Settings
 
 </a>
 
-
-
-<a href="#"
-class="dashboard-menu">
-
-<i class="bi bi-gear"></i>
-
-System
-
-</a>
 
 
 </div>

@@ -1,12 +1,18 @@
-{{-- ================= SEARCH & FILTER ================= --}}
+{{-- ================= SEARCH ================= --}}
 
 <div class="card card-custom shadow-sm border-0 mt-4">
 
     <div class="card-body">
 
-        <div class="row g-3">
+        <div class="row g-3 align-items-end">
 
             <div class="col-lg-4">
+
+                <label class="form-label fw-semibold">
+
+                    Search Vessel
+
+                </label>
 
                 <input
 
@@ -16,11 +22,17 @@
 
                     class="form-control"
 
-                    placeholder="🔍 Search Vessel">
+                    placeholder="Search by Vessel, IMO or Destination">
 
             </div>
 
             <div class="col-lg-3">
+
+                <label class="form-label fw-semibold">
+
+                    Status
+
+                </label>
 
                 <select
 
@@ -28,15 +40,35 @@
 
                     class="form-select">
 
-                    <option value="">All Status</option>
+                    <option value="">
 
-                    <option>Sailing</option>
+                        All Status
 
-                    <option>Loading</option>
+                    </option>
 
-                    <option>Arrived</option>
+                    <option value="Sailing">
 
-                    <option>Delayed</option>
+                        Sailing
+
+                    </option>
+
+                    <option value="Loading">
+
+                        Loading
+
+                    </option>
+
+                    <option value="Arrived">
+
+                        Arrived
+
+                    </option>
+
+                    <option value="Delayed">
+
+                        Delayed
+
+                    </option>
 
                 </select>
 
@@ -44,17 +76,27 @@
 
             <div class="col-lg-3">
 
+                <label class="form-label fw-semibold">
+
+                    Country
+
+                </label>
+
                 <select
 
                     id="countryFilter"
 
                     class="form-select">
 
-                    <option value="">All Country</option>
+                    <option value="">
+
+                        All Country
+
+                    </option>
 
                     @foreach($vessels->pluck('country.name')->unique()->sort() as $country)
 
-                        <option>
+                        <option value="{{ $country }}">
 
                             {{ $country }}
 
@@ -74,6 +116,8 @@
 
                     onclick="resetFilter()">
 
+                    <i class="bi bi-arrow-clockwise"></i>
+
                     Reset
 
                 </button>
@@ -86,7 +130,107 @@
 
 </div>
 
+{{-- ================= SUMMARY ================= --}}
 
+<div class="row mt-4 g-3">
+
+    <div class="col-lg-3">
+
+        <div class="card card-custom text-center p-3">
+
+            <small class="text-muted">
+
+                Total Vessel
+
+            </small>
+
+            <h3
+
+                class="fw-bold"
+
+                id="summaryTotal">
+
+                {{ $totalVessels }}
+
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card card-custom text-center p-3">
+
+            <small class="text-muted">
+
+                Average Speed
+
+            </small>
+
+            <h3
+
+                class="fw-bold text-primary"
+
+                id="summarySpeed">
+
+                {{ $averageSpeed }}
+
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card card-custom text-center p-3">
+
+            <small class="text-muted">
+
+                Average Risk
+
+            </small>
+
+            <h3
+
+                class="fw-bold text-warning"
+
+                id="summaryRisk">
+
+                {{ $averageRisk }}
+
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card card-custom text-center p-3">
+
+            <small class="text-muted">
+
+                Delayed
+
+            </small>
+
+            <h3
+
+                class="fw-bold text-danger"
+
+                id="summaryDelay">
+
+                {{ $delayed }}
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
 
 {{-- ================= TABLE ================= --}}
 
@@ -96,13 +240,17 @@
 
         <div class="d-flex justify-content-between align-items-center">
 
-            <h4>
+            <h4 class="mb-0">
 
-                🚢 Live Vessel Table
+                🚢 Live Vessel Fleet
 
             </h4>
 
-            <span class="badge bg-success">
+            <span
+
+                class="badge bg-success"
+
+                id="totalBadge">
 
                 {{ $totalVessels }} Vessel
 
@@ -112,45 +260,69 @@
 
     </div>
 
-    <div class="card-body">
+    <div class="card-body p-0">
 
         <div class="table-responsive">
 
             <table
 
-                class="table table-hover align-middle"
+                class="table table-hover align-middle mb-0"
 
                 id="vesselTable">
 
                 <thead class="table-light">
 
-                <tr>
+                    <tr>
 
-                    <th>Vessel</th>
+                        <th>Vessel</th>
 
-                    <th>Country</th>
+                        <th>Country</th>
 
-                    <th>Destination</th>
+                        <th>Destination</th>
 
-                    <th>Status</th>
+                        <th>Status</th>
 
-                    <th>Cargo</th>
+                        <th>Cargo</th>
 
-                    <th>Speed</th>
+                        <th>Speed</th>
 
-                    <th>Risk</th>
+                        <th width="140">
 
-                    <th>ETA</th>
+                            Risk
 
-                    <th></th>
+                        </th>
 
-                </tr>
+                        <th>ETA</th>
+
+                        <th width="120">
+
+                            Action
+
+                        </th>
+
+                    </tr>
 
                 </thead>
 
                 <tbody>
 
                 @foreach($vessels as $vessel)
+
+                @php
+
+                    $riskColor='success';
+
+                    if($vessel->risk_score>=70){
+
+                        $riskColor='danger';
+
+                    }elseif($vessel->risk_score>=40){
+
+                        $riskColor='warning';
+
+                    }
+
+                @endphp
 
                 <tr>
 
@@ -186,39 +358,21 @@
 
                     <td>
 
-                        @if($vessel->status=="Sailing")
+                        <span class="badge
 
-                            <span class="badge bg-primary">
+                        @if($vessel->status=='Sailing') bg-primary
 
-                                Sailing
+                        @elseif($vessel->status=='Loading') bg-warning text-dark
 
-                            </span>
+                        @elseif($vessel->status=='Arrived') bg-success
 
-                        @elseif($vessel->status=="Loading")
+                        @else bg-danger
 
-                            <span class="badge bg-warning text-dark">
+                        @endif">
 
-                                Loading
+                            {{ $vessel->status }}
 
-                            </span>
-
-                        @elseif($vessel->status=="Arrived")
-
-                            <span class="badge bg-success">
-
-                                Arrived
-
-                            </span>
-
-                        @else
-
-                            <span class="badge bg-danger">
-
-                                Delayed
-
-                            </span>
-
-                        @endif
+                        </span>
 
                     </td>
 
@@ -230,37 +384,31 @@
 
                     <td>
 
-                        {{ $vessel->speed }}
-
-                        Knot
+                        {{ $vessel->speed }} Knot
 
                     </td>
 
                     <td>
 
-                        @php
+                        <div class="progress mb-1"
 
-                            $riskColor='success';
+                             style="height:8px">
 
-                            if($vessel->risk_score>=70){
+                            <div
 
-                                $riskColor='danger';
+                                class="progress-bar bg-{{ $riskColor }}"
 
-                            }elseif($vessel->risk_score>=40){
+                                style="width:{{ $vessel->risk_score }}%">
 
-                                $riskColor='warning';
+                            </div>
 
-                            }
+                        </div>
 
-                        @endphp
-
-                        <span
-
-                            class="badge bg-{{ $riskColor }}">
+                        <small>
 
                             {{ $vessel->risk_score }}
 
-                        </span>
+                        </small>
 
                     </td>
 
@@ -274,27 +422,19 @@
 
                         <button
 
-                            class="btn btn-outline-primary btn-sm"
+                            class="btn btn-primary btn-sm"
 
-                            onclick="showDetail(
+                            onclick="focusVessel(
 
-                            '{{ $vessel->name }}',
+                                {{ $vessel->id }},
 
-                            '{{ $vessel->country->name }}',
+                                {{ $vessel->latitude }},
 
-                            '{{ $vessel->destination }}',
-
-                            '{{ $vessel->cargo }}',
-
-                            '{{ $vessel->speed }}',
-
-                            '{{ $vessel->capacity }}',
-
-                            '{{ $vessel->risk_score }}'
+                                {{ $vessel->longitude }}
 
                             )">
 
-                            Detail
+                            <i class="bi bi-geo-alt-fill"></i>
 
                         </button>
 
@@ -314,195 +454,101 @@
 
 </div>
 
-
-
-{{-- ================= MODAL ================= --}}
-
-<div
-
-class="modal fade"
-
-id="detailModal"
-
-tabindex="-1">
-
-<div class="modal-dialog">
-
-<div class="modal-content">
-
-<div class="modal-header">
-
-<h5>
-
-🚢 Vessel Detail
-
-</h5>
-
-<button
-
-class="btn-close"
-
-data-bs-dismiss="modal">
-
-</button>
-
-</div>
-
-<div class="modal-body"
-
-id="detailBody">
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-
 <script>
 
-function showDetail(
+function focusVessel(id,lat,lng){
 
-name,
+    if(typeof vesselMap==="undefined") return;
 
-country,
+    vesselMap.flyTo(
 
-destination,
+        [lat,lng],
 
-cargo,
+        6,
 
-speed,
+        {
 
-capacity,
+            animate:true,
 
-risk
+            duration:2
 
-){
+        }
 
-document.getElementById(
+    );
 
-'detailBody'
+    if(vesselMarkers[id]){
 
-).innerHTML=`
+        vesselMarkers[id].openPopup();
 
-<table class="table">
-
-<tr>
-
-<th>Name</th>
-
-<td>${name}</td>
-
-</tr>
-
-<tr>
-
-<th>Country</th>
-
-<td>${country}</td>
-
-</tr>
-
-<tr>
-
-<th>Destination</th>
-
-<td>${destination}</td>
-
-</tr>
-
-<tr>
-
-<th>Cargo</th>
-
-<td>${cargo}</td>
-
-</tr>
-
-<tr>
-
-<th>Speed</th>
-
-<td>${speed} Knot</td>
-
-</tr>
-
-<tr>
-
-<th>Capacity</th>
-
-<td>${Number(capacity).toLocaleString()}</td>
-
-</tr>
-
-<tr>
-
-<th>Risk Score</th>
-
-<td>${risk}</td>
-
-</tr>
-
-</table>
-
-`;
-
-new bootstrap.Modal(
-
-document.getElementById(
-
-'detailModal'
-
-)
-
-).show();
+    }
 
 }
-
-
 
 function filterTable(){
 
-let keyword=document.getElementById("searchInput").value.toLowerCase();
+    let keyword=document.getElementById("searchInput").value.toLowerCase();
 
-let status=document.getElementById("statusFilter").value;
+    let status=document.getElementById("statusFilter").value;
 
-let country=document.getElementById("countryFilter").value;
+    let country=document.getElementById("countryFilter").value;
 
-document.querySelectorAll("#vesselTable tbody tr")
+    let visible=0;
 
-.forEach(row=>{
+    document.querySelectorAll("#vesselTable tbody tr")
 
-let vessel=row.cells[0].innerText.toLowerCase();
+    .forEach(function(row){
 
-let rowCountry=row.cells[1].innerText;
+        let vessel=row.cells[0].innerText.toLowerCase();
 
-let rowStatus=row.cells[3].innerText.trim();
+        let destination=row.cells[2].innerText.toLowerCase();
 
-let show=true;
+        let rowCountry=row.cells[1].innerText.trim();
 
-if(keyword && !vessel.includes(keyword))
+        let rowStatus=row.cells[3].innerText.trim();
 
-show=false;
+        let show=true;
 
-if(status && rowStatus!=status)
+        if(
 
-show=false;
+            keyword &&
 
-if(country && rowCountry!=country)
+            !vessel.includes(keyword) &&
 
-show=false;
+            !destination.includes(keyword)
 
-row.style.display=show?"":"none";
+        ){
 
-});
+            show=false;
+
+        }
+
+        if(status && rowStatus!=status){
+
+            show=false;
+
+        }
+
+        if(country && rowCountry!=country){
+
+            show=false;
+
+        }
+
+        row.style.display=show?"":"none";
+
+        if(show){
+
+            visible++;
+
+        }
+
+    });
+
+    document.getElementById("totalBadge").innerHTML=
+
+        visible+" Vessel";
 
 }
-
-
 
 document.getElementById("searchInput")
 
@@ -516,18 +562,120 @@ document.getElementById("countryFilter")
 
 .addEventListener("change",filterTable);
 
-
-
 function resetFilter(){
 
-document.getElementById("searchInput").value="";
+    document.getElementById("searchInput").value="";
 
-document.getElementById("statusFilter").value="";
+    document.getElementById("statusFilter").value="";
 
-document.getElementById("countryFilter").value="";
+    document.getElementById("countryFilter").value="";
 
-filterTable();
+    filterTable();
 
 }
+
+/* ===============================
+SORT TABLE
+=============================== */
+
+document.querySelectorAll("#vesselTable th")
+
+.forEach(function(th,index){
+
+    th.style.cursor="pointer";
+
+    let asc=true;
+
+    th.onclick=function(){
+
+        let tbody=document.querySelector("#vesselTable tbody");
+
+        let rows=[...tbody.rows];
+
+        rows.sort(function(a,b){
+
+            let A=a.cells[index].innerText.trim();
+
+            let B=b.cells[index].innerText.trim();
+
+            return asc
+
+            ?A.localeCompare(B)
+
+            :B.localeCompare(A);
+
+        });
+
+        asc=!asc;
+
+        rows.forEach(function(r){
+
+            tbody.appendChild(r);
+
+        });
+
+    };
+
+});
+
+/* ===============================
+REALTIME SUMMARY
+=============================== */
+
+function refreshSummary(){
+
+    if(typeof vessels==="undefined") return;
+
+    let total=vessels.length;
+
+    let delay=0;
+
+    let risk=0;
+
+    let speed=0;
+
+    vessels.forEach(function(v){
+
+        if(v.status=="Delayed"){
+
+            delay++;
+
+        }
+
+        risk+=Number(v.risk);
+
+        speed+=Number(v.speed);
+
+    });
+
+    document.getElementById("summaryTotal").innerHTML=total;
+
+    document.getElementById("summaryDelay").innerHTML=delay;
+
+    document.getElementById("summaryRisk").innerHTML=
+
+        (risk/total).toFixed(1);
+
+    document.getElementById("summarySpeed").innerHTML=
+
+        (speed/total).toFixed(1);
+
+    document.getElementById("totalBadge").innerHTML=
+
+        total+" Vessel";
+
+}
+
+/* ===============================
+AUTO REFRESH
+=============================== */
+
+setInterval(function(){
+
+    refreshSummary();
+
+},5000);
+
+refreshSummary();
 
 </script>

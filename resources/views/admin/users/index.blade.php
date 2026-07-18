@@ -29,7 +29,7 @@ Kelola pengguna SupplyChain AI
 </div>
 
 
-<a href="{{route('users.create')}}"
+<a href="{{ route('admin.users.create') }}"
 class="btn btn-primary">
 
 + Add User
@@ -141,7 +141,7 @@ User
 <td>
 
 
-<a href="{{route('users.edit',$user)}}"
+<a href="{{ route('admin.users.edit', $user) }}"
 class="btn btn-warning btn-sm">
 
 Edit
@@ -151,7 +151,7 @@ Edit
 
 
 
-<form action="{{route('users.destroy',$user)}}"
+<form action="{{ route('admin.users.destroy', $user) }}"
 method="POST"
 class="d-inline">
 

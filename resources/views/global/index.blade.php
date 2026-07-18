@@ -62,9 +62,10 @@
 ])
 
 
-{{-- ================= WEATHER & NEWS ================= --}}
+{{-- ================= WEATHER & TRADE ================= --}}
 
-<div class="row g-4 mt-1">
+<div class="row g-4 mt-4">
+
 
     <div class="col-lg-6">
 
@@ -72,11 +73,30 @@
 
     </div>
 
+
+
     <div class="col-lg-6">
+
+        @include('global.partials.trade')
+
+    </div>
+
+
+</div>
+
+
+
+{{-- ================= COUNTRY NEWS ================= --}}
+
+<div class="row mt-4">
+
+
+    <div class="col-12">
 
         @include('global.partials.news')
 
     </div>
+
 
 </div>
 
@@ -99,6 +119,49 @@
 
 </div>
 
+
+{{-- ================= COUNTRY RISK OVERVIEW ================= --}}
+
+<div class="row g-4 mt-4">
+
+    <div class="col-12">
+
+        @include('global.partials.risk-overview')
+
+    </div>
+
+</div>
+
+
+{{-- ================= LOGISTICS INTELLIGENCE ================= --}}
+
+
+<div class="row g-4 mt-4">
+
+
+<div class="col-12">
+
+
+@include('global.partials.logistics')
+
+
+</div>
+
+
+</div>
+
+
+{{-- ================= AI TRADE RECOMMENDATION ================= --}}
+
+<div class="row g-4 mt-4">
+
+    <div class="col-12">
+
+        @include('global.partials.trade-recommendation')
+
+    </div>
+
+</div>
 
 {{-- ================= RECENT ACTIVITY & AI ================= --}}
 

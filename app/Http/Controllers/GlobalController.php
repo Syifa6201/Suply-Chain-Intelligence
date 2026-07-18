@@ -11,10 +11,13 @@ use App\Services\NewsService;
 use App\Services\RiskEngineService;
 use App\Models\Vessel;
 
+use App\Services\TradeRecommendationService;
+
 class GlobalController extends Controller
 {
     public function index(
-        WeatherService $weatherService,
+    WeatherService $weatherService,
+    TradeRecommendationService $tradeEngine,
         EconomyService $economyService,
         CurrencyService $currencyService,
         NewsService $newsService,
@@ -33,32 +36,63 @@ class GlobalController extends Controller
 
 
         /*
-        |--------------------------------------------------------------------------
-        | SELECT COUNTRY
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| SELECT COUNTRY
+|--------------------------------------------------------------------------
+*/
 
-        $selectedCountry = request(
-            'country',
-            'Indonesia'
-        );
+$selectedCountry = request('country');
 
 
-        $focusCountry = Country::where(
-            'name',
-            $selectedCountry
-        )->first();
+$focusCountry = null;
+
+
+if($selectedCountry){
+
+    $focusCountry = Country::where(
+        'name',
+        $selectedCountry
+    )->first();
+
+
+    if($focusCountry){
+
+
+        if (
+            empty($focusCountry->latitude) ||
+            empty($focusCountry->longitude)
+        ) {
+
+
+            $firstVessel = Vessel::where(
+                    'country_id',
+                    $focusCountry->id
+                )
+
+                ->whereNotNull('latitude')
+
+                ->whereNotNull('longitude')
+
+                ->first();
 
 
 
-        if(!$focusCountry){
+            if($firstVessel){
 
-            $focusCountry = Country::first();
+                $focusCountry->latitude =
+                    $firstVessel->latitude;
+
+
+                $focusCountry->longitude =
+                    $firstVessel->longitude;
+
+            }
 
         }
 
+    }
 
-
+}
         /*
         |--------------------------------------------------------------------------
         | WORLD MAP MARKERS
@@ -91,30 +125,35 @@ class GlobalController extends Controller
 
 
 
+/*
+|--------------------------------------------------------------------------
+| WEATHER
+|--------------------------------------------------------------------------
+*/
 
-        /*
-        |--------------------------------------------------------------------------
-        | WEATHER
-        |--------------------------------------------------------------------------
-        */
-
-        try{
-
-            $weather = $weatherService->getCurrentWeather(
-
-                $focusCountry->latitude,
-
-                $focusCountry->longitude
-
-            );
+$weather = [];
 
 
-        }catch(\Exception $e){
+if($focusCountry){
 
-            $weather = [];
+    try{
 
-        }
+        $weather = $weatherService->getCurrentWeather(
 
+            $focusCountry->latitude,
+
+            $focusCountry->longitude
+
+        );
+
+
+    }catch(\Exception $e){
+
+        $weather = [];
+
+    }
+
+}
 
 
 
@@ -127,11 +166,28 @@ class GlobalController extends Controller
         try{
 
 
-            $economy = $economyService->getCountryEconomy(
+            $economy = [];
 
-                $focusCountry->iso3
 
-            );
+if($focusCountry){
+
+    try{
+
+
+        $economy = $economyService->getCountryEconomy(
+
+            $focusCountry->iso3
+
+        );
+
+
+    }catch(\Exception $e){
+
+        $economy = [];
+
+    }
+
+}
 
 
         }catch(\Exception $e){
@@ -141,7 +197,55 @@ class GlobalController extends Controller
         }
 
 
+/*
+|--------------------------------------------------------------------------
+| TRADE INTELLIGENCE
+|--------------------------------------------------------------------------
+*/
 
+
+$trade = [
+
+    'export'=>0,
+
+    'import'=>0,
+
+    'balance'=>0,
+
+    'status'=>'No Data'
+
+];
+
+
+if($focusCountry && !empty($economy)){
+
+
+    $export = $economy['exports'] ?? 0;
+
+    $import = $economy['imports'] ?? 0;
+
+
+
+    $trade = [
+
+        'export'=>$export,
+
+        'import'=>$import,
+
+        'balance'=>$export-$import,
+
+        'status'=>
+
+            ($export-$import) >= 0
+
+            ? 'Trade Surplus'
+
+            : 'Trade Deficit'
+
+    ];
+
+
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -152,11 +256,28 @@ class GlobalController extends Controller
         try{
 
 
-            $currency = $currencyService->getRate(
+            $currency = [];
 
-                $focusCountry->currency
 
-            );
+if($focusCountry){
+
+    try{
+
+
+        $currency = $currencyService->getRate(
+
+            $focusCountry->currency
+
+        );
+
+
+    }catch(\Exception $e){
+
+        $currency = [];
+
+    }
+
+}
 
 
         }catch(\Exception $e){
@@ -167,29 +288,36 @@ class GlobalController extends Controller
 
 
 
+/*
+|--------------------------------------------------------------------------
+| NEWS BASED ON SELECTED COUNTRY
+|--------------------------------------------------------------------------
+*/
 
-        /*
-        |--------------------------------------------------------------------------
-        | NEWS
-        |--------------------------------------------------------------------------
-        */
-
-        try{
-
-
-            $news = $newsService->getGlobalNews();
+$news = [];
 
 
-        }catch(\Exception $e){
+if($focusCountry){
+
+    try{
 
 
-            $news = [];
+        $news = $newsService->getCountryNews(
+
+            $focusCountry->name
+
+        );
 
 
-        }
+    }catch(\Exception $e){
 
 
+        $news = [];
 
+
+    }
+
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -226,6 +354,28 @@ class GlobalController extends Controller
         }
 
 
+    /*
+|--------------------------------------------------------------------------
+| PORT BASED ON SELECTED COUNTRY
+|--------------------------------------------------------------------------
+*/
+
+
+$ports = collect();
+
+
+if($focusCountry){
+
+    $ports = Port::with('country')
+
+        ->where(
+            'country_id',
+            $focusCountry->id
+        )
+
+        ->get();
+
+}
 /*
 |--------------------------------------------------------------------------
 | VESSEL BASED ON SELECTED COUNTRY
@@ -233,18 +383,25 @@ class GlobalController extends Controller
 */
 
 
-$vessels = Vessel::with('country')
+$vessels = collect();
 
-    ->where(
-        'country_id',
-        $focusCountry->id
-    )
 
-    ->whereNotNull('latitude')
+if($focusCountry){
 
-    ->whereNotNull('longitude')
+    $vessels = Vessel::with('country')
 
-    ->get();
+        ->where(
+            'country_id',
+            $focusCountry->id
+        )
+
+        ->whereNotNull('latitude')
+
+        ->whereNotNull('longitude')
+
+        ->get();
+
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -297,34 +454,95 @@ $vessels = Vessel::with('country')
             $mediumRisk;
 
 
+       /*
+|--------------------------------------------------------------------------
+| AI TRADE RECOMMENDATION
+|--------------------------------------------------------------------------
+*/
 
+
+$tradeRecommendation = [];
+
+
+if($focusCountry){
+
+
+    $tradeRecommendation =
+        $tradeEngine->analyze(
+
+            $weather,
+
+            $economy,
+
+            $currency,
+
+            $news,
+
+            $ports,
+
+            $risk
+
+        );
+
+
+}
 
         /*
-        |--------------------------------------------------------------------------
-        | PORT INTELLIGENCE
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| TOP RISK PORTS
+|--------------------------------------------------------------------------
+*/
+
+$topPorts = collect();
 
 
-        $topPorts = Port::with('country')
-
-            ->orderByDesc('congestion')
-
-            ->take(8)
-
-            ->get();
+if($focusCountry){
 
 
+    $topPorts = Port::with('country')
+
+        ->where(
+            'country_id',
+            $focusCountry->id
+        )
+
+        ->orderByDesc('congestion')
+
+        ->take(8)
+
+        ->get();
 
 
-        $recentPorts = Port::with('country')
+}
 
-            ->latest()
+/*
+|--------------------------------------------------------------------------
+| RECENT PORT ACTIVITY
+|--------------------------------------------------------------------------
+*/
 
-            ->take(5)
 
-            ->get();
+$recentPorts = collect();
 
+
+if($focusCountry){
+
+
+    $recentPorts = Port::with('country')
+
+        ->where(
+            'country_id',
+            $focusCountry->id
+        )
+
+        ->latest()
+
+        ->take(5)
+
+        ->get();
+
+
+}
 
 
 
@@ -397,6 +615,11 @@ $vessels = Vessel::with('country')
 
                 'vessels',
 
+                'ports',
+
+                'trade',
+
+                'tradeRecommendation',
             )
 
         );

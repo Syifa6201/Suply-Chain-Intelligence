@@ -102,7 +102,11 @@
 
                             <b>
 
-                                {{ $totalVessels }}
+                                <span id="summaryTotal">
+
+{{ $totalVessels }}
+
+</span>
 
                             </b>
 
@@ -118,7 +122,11 @@
 
                             <b>
 
-                                {{ $averageSpeed }}
+                                <span id="summarySpeed">
+
+{{ $averageSpeed }}
+
+</span>
 
                                 Knot
 
@@ -136,7 +144,11 @@
 
                             <b>
 
-                                {{ $averageRisk }}
+                                <span id="summaryRisk">
+
+{{ $averageRisk }}
+
+</span>
 
                             </b>
 
@@ -152,7 +164,11 @@
 
                             <span class="badge bg-danger">
 
-                                {{ $delayed }}
+                                <span id="summaryDelay">
+
+{{ $delayed }}
+
+</span>
 
                             </span>
 
@@ -211,41 +227,31 @@
 
 <script>
 
-document.addEventListener(
+let fleetChart;
 
-"DOMContentLoaded",
+document.addEventListener("DOMContentLoaded",function(){
 
-function(){
+const ctx=document.getElementById("fleetChart");
 
-const ctx=document.getElementById(
+fleetChart=new Chart(ctx,{
 
-'fleetChart'
-
-);
-
-if(!ctx) return;
-
-new Chart(ctx,{
-
-type:'bar',
+type:"doughnut",
 
 data:{
 
 labels:[
 
-'Sailing',
+"Sailing",
 
-'Loading',
+"Loading",
 
-'Arrived',
+"Arrived",
 
-'Delayed'
+"Delayed"
 
 ],
 
 datasets:[{
-
-label:'Number of Vessel',
 
 data:[
 
@@ -259,7 +265,19 @@ data:[
 
 ],
 
-borderWidth:1
+backgroundColor:[
+
+"#2563eb",
+
+"#f59e0b",
+
+"#10b981",
+
+"#ef4444"
+
+],
+
+borderWidth:0
 
 }]
 
@@ -269,21 +287,13 @@ options:{
 
 responsive:true,
 
+cutout:"70%",
+
 plugins:{
 
 legend:{
 
-display:false
-
-}
-
-},
-
-scales:{
-
-y:{
-
-beginAtZero:true
+position:"bottom"
 
 }
 
@@ -294,5 +304,87 @@ beginAtZero:true
 });
 
 });
+
+function updateChart(){
+
+document.getElementById("summaryTotal").innerHTML=vessels.length;
+
+document.getElementById("summaryDelay").innerHTML=delayed;
+
+let avgSpeed=0;
+
+let avgRisk=0;
+
+vessels.forEach(v=>{
+
+avgSpeed+=Number(v.speed);
+
+avgRisk+=Number(v.risk);
+
+});
+
+avgSpeed=(avgSpeed/vessels.length).toFixed(1);
+
+avgRisk=(avgRisk/vessels.length).toFixed(1);
+
+document.getElementById("summarySpeed").innerHTML=avgSpeed;
+
+document.getElementById("summaryRisk").innerHTML=avgRisk;
+
+if(!fleetChart) return;
+
+let sailing=0;
+let loading=0;
+let arrived=0;
+let delayed=0;
+
+vessels.forEach(ship=>{
+
+switch(ship.status){
+
+case "Sailing":
+
+sailing++;
+
+break;
+
+case "Loading":
+
+loading++;
+
+break;
+
+case "Arrived":
+
+arrived++;
+
+break;
+
+case "Delayed":
+
+delayed++;
+
+break;
+
+}
+
+});
+
+fleetChart.data.datasets[0].data=[
+
+sailing,
+
+loading,
+
+arrived,
+
+delayed
+
+];
+
+fleetChart.update();
+
+}
 
 </script>
+

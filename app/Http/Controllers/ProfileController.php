@@ -2,124 +2,125 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
 
-
     public function index()
     {
+        if (!session()->has('user_id')) {
 
-        $user = \App\Models\User::first();
-
-
-        if(!$user){
-
-            $user = (object)[
-
-                'name'=>'Admin SupplyChain AI',
-
-                'email'=>'admin@supplychain.ai',
-
-                'role'=>'Administrator',
-
-                'created_at'=>now()
-
-            ];
+            return redirect('/login');
 
         }
 
+        $user = User::findOrFail(
+            session('user_id')
+        );
 
         return view(
             'profile.index',
             compact('user')
         );
-
     }
-
-
 
 
 
     public function update(Request $request)
     {
 
+        if (!session()->has('user_id')) {
 
-        $user = \App\Models\User::first();
-
-
-        // jika belum login
-        if(!$user){
-
-            return back()->with(
-                'error',
-                'Profile demo. Silahkan aktifkan login terlebih dahulu.'
-            );
+            return redirect('/login');
 
         }
 
-
-
         $request->validate([
 
-            'name'=>'required',
+            'name'  => 'required|string|max:255',
 
-            'email'=>'required|email'
+            'email' => 'required|email|unique:users,email,'.session('user_id'),
 
         ]);
 
-
+        $user = User::findOrFail(
+            session('user_id')
+        );
 
         $user->update([
-    'name'=>$request->name,
-    'email'=>$request->email
-]);
 
+            'name'  => $request->name,
 
+            'email' => $request->email,
+
+        ]);
+
+        session([
+
+            'user_name' => $user->name,
+
+        ]);
 
         return back()->with(
 
             'success',
 
-            'Profile berhasil diperbarui'
+            'Profile berhasil diperbarui.'
 
         );
-
-
     }
-
-
-
-
 
 
 
     public function password(Request $request)
     {
 
+        if (!session()->has('user_id')) {
 
-        $user = Auth::user();
+            return redirect('/login');
 
+        }
 
-        if(!$user){
+        $request->validate([
+
+            'current_password' => 'required',
+
+            'new_password'     => 'required|min:6|confirmed',
+
+        ]);
+
+        $user = User::findOrFail(
+            session('user_id')
+        );
+
+        if (!Hash::check($request->current_password, $user->password)) {
 
             return back()->with(
 
                 'error',
 
-                'User belum login'
+                'Password lama salah.'
 
             );
 
         }
 
+        $user->update([
 
-        return back();
+            'password' => Hash::make($request->new_password),
 
+        ]);
 
+        return back()->with(
+
+            'success',
+
+            'Password berhasil diperbarui.'
+
+        );
     }
-
 
 }

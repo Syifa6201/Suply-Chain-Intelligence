@@ -19,7 +19,7 @@ Tambah User
 
 
 <form method="POST"
-action="{{route('users.store')}}">
+action="{{ route('admin.users.store') }}">
 
 @csrf
 

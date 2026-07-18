@@ -170,14 +170,36 @@
 
                     <td>
 
+    <div class="d-flex gap-2">
 
-                        <a href="{{ route('country.show', $country->code) }}"
-                        class="btn btn-primary btn-sm">
-                            View Intelligence
-                        </a>
+        <a href="{{ route('country.show', $country->code) }}"
+        class="btn btn-primary btn-sm">
 
+            <i class="bi bi-eye"></i>
 
-                    </td>
+            View
+
+        </a>
+
+        <form
+            action="{{ route('watchlist.store', $country->code) }}"
+            method="POST">
+
+            @csrf
+
+            <button
+                type="submit"
+                class="btn btn-warning btn-sm">
+
+                <i class="bi bi-star-fill"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+</td>
 
 
                 </tr>

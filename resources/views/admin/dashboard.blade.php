@@ -1,170 +1,315 @@
 @extends('layouts.app')
 
-
 @section('content')
 
+<div class="container-fluid py-4">
 
-<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
+        <div>
 
-<h1 class="fw-bold mb-2">
+            <h1 class="fw-bold text-dark">
 
-⚙️ Admin Dashboard
+                <i class="bi bi-speedometer2 text-primary"></i>
 
-</h1>
+                Admin Dashboard
 
+            </h1>
 
-<p class="text-muted">
+            <p class="text-muted mb-0">
 
-SupplyChain AI Management Center
+                SupplyChain AI Management Center
 
-</p>
+            </p>
 
+        </div>
 
+        <span class="badge bg-primary fs-6 px-3 py-2">
 
+            Administrator
 
-<div class="row g-4 mt-4">
+        </span>
 
-
-<div class="col-md-4">
-
-<div class="kpi-card">
-
-
-<h6>
-👥 Total Users
-</h6>
+    </div>
 
 
-<h1>
 
-{{$totalUsers}}
+    <div class="row g-4 mb-5">
 
-</h1>
+        <div class="col-lg-4">
 
+            <div class="stat-card">
+
+                <div class="stat-icon bg-primary">
+
+                    <i class="bi bi-people-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h6>Total Users</h6>
+
+                    <h2>{{ $totalUsers }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon bg-success">
+
+                    <i class="bi bi-geo-alt-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h6>Total Ports</h6>
+
+                    <h2>{{ $totalPorts }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon bg-warning">
+
+                    <i class="bi bi-newspaper"></i>
+
+                </div>
+
+                <div>
+
+                    <h6>Total Articles</h6>
+
+                    <h2>{{ $totalArticles }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+
+            <a href="{{ route('admin.users.index') }}" class="admin-card">
+
+                <div class="admin-icon bg-primary">
+
+                    <i class="bi bi-people-fill"></i>
+
+                </div>
+
+                <h4>User Management</h4>
+
+                <p>
+                    Tambah, edit dan hapus akun pengguna.
+                </p>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="col-lg-4">
+
+            <a href="{{ route('ports.index') }}" class="admin-card">
+
+                <div class="admin-icon bg-success">
+
+                    <i class="bi bi-anchor-fill"></i>
+
+                </div>
+
+                <h4>Port Dataset</h4>
+
+                <p>
+                    Kelola data pelabuhan dunia.
+                </p>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="col-lg-4">
+
+            <a href="{{ route('admin.articles.index') }}" class="admin-card">
+
+                <div class="admin-icon bg-warning">
+
+                    <i class="bi bi-journal-richtext"></i>
+
+                </div>
+
+                <h4>Article Analysis</h4>
+
+                <p>
+                    Kelola artikel analisis untuk pengguna.
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 
-</div>
 
 
+<style>
 
+.stat-card{
 
-<div class="col-md-4">
+    background:#fff;
 
-<div class="kpi-card">
+    border-radius:20px;
 
+    padding:25px;
 
-<h6>
-⚓ Total Ports
-</h6>
+    display:flex;
 
+    align-items:center;
 
-<h1>
+    gap:20px;
 
-{{$totalPorts}}
+    box-shadow:0 15px 35px rgba(15,23,42,.08);
 
-</h1>
+}
 
+.stat-card h6{
 
-</div>
+    color:#64748b;
 
-</div>
+    margin-bottom:5px;
 
+}
 
+.stat-card h2{
 
+    font-weight:800;
 
+    margin:0;
 
-<div class="col-md-4">
+}
 
-<div class="kpi-card">
+.stat-icon{
 
+    width:70px;
 
-<h6>
-🌍 Total Countries
-</h6>
+    height:70px;
 
+    border-radius:18px;
 
-<h1>
+    display:flex;
 
-{{$totalCountries}}
+    justify-content:center;
 
-</h1>
+    align-items:center;
 
+    color:#fff;
 
-</div>
+    font-size:30px;
 
-</div>
+}
 
+.admin-card{
 
-</div>
+    background:#fff;
 
+    border-radius:20px;
 
+    padding:35px;
 
+    display:block;
 
-<div class="row g-4 mt-5">
+    text-decoration:none;
 
+    color:#1e293b;
 
-<div class="col-md-4">
+    box-shadow:0 15px 35px rgba(15,23,42,.08);
 
+    transition:.3s;
 
-<a href="{{route('users.index')}}" class="dashboard-menu">
+    height:100%;
 
+}
 
-👥
+.admin-card:hover{
 
-User Management
+    transform:translateY(-8px);
 
+    text-decoration:none;
 
-</a>
+    color:#1e293b;
 
+    box-shadow:0 20px 45px rgba(37,99,235,.15);
 
-</div>
+}
 
+.admin-icon{
 
+    width:70px;
 
-<div class="col-md-4">
+    height:70px;
 
+    border-radius:18px;
 
-<a href="#" class="dashboard-menu">
+    display:flex;
 
+    justify-content:center;
 
-⚓
+    align-items:center;
 
-Port Dataset
+    color:white;
 
+    font-size:28px;
 
-</a>
+    margin-bottom:20px;
 
+}
 
-</div>
+.admin-card h4{
 
+    font-weight:700;
 
+    margin-bottom:10px;
 
+}
 
-<div class="col-md-4">
+.admin-card p{
 
+    color:#64748b;
 
-<a href="#" class="dashboard-menu">
+    margin:0;
 
+}
 
-📰
-
-Article Analysis
-
-
-</a>
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
+</style>
 
 @endsection

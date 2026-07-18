@@ -10,14 +10,32 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('articles', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->longText('content');
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('articles', function (Blueprint $table) {
+
+        $table->id();
+
+        $table->string('title');
+
+        $table->string('category');
+
+        $table->longText('content');
+
+        $table->string('image')->nullable();
+
+        $table->enum('status',[
+            'Draft',
+            'Published'
+        ])->default('Draft');
+
+        $table->foreignId('author_id')
+              ->constrained('users')
+              ->cascadeOnDelete();
+
+        $table->timestamps();
+
+    });
+}
 
     /**
      * Reverse the migrations.

@@ -277,16 +277,127 @@ USD Rate
 
 <h6>
 
-Risk Status
+Currency Risk Score
 
 </h6>
 
 
+
 <h2>
 
-{{$currencyData['status']}}
+
+@if($currencyData)
+
+
+@if($currencyData['status']=="High")
+
+80 / 100
+
+
+@elseif($currencyData['status']=="Medium")
+
+50 / 100
+
+
+@else
+
+25 / 100
+
+
+@endif
+
+
+@else
+
+-
+
+@endif
+
 
 </h2>
+
+
+
+@if($currencyData)
+
+
+@if($currencyData['status']=="High")
+
+<span class="badge bg-danger">
+
+Critical Risk
+
+</span>
+
+
+@elseif($currencyData['status']=="Medium")
+
+<span class="badge bg-warning">
+
+Warning
+
+</span>
+
+
+@else
+
+<span class="badge bg-success">
+
+Stable
+
+</span>
+
+
+@endif
+
+
+
+<div class="mt-3">
+
+
+<small class="text-muted">
+
+Risk Level
+
+</small>
+
+
+<div class="risk-progress mt-2">
+
+
+<div 
+
+class="risk-progress-bar"
+
+
+style="width:
+
+@if($currencyData['status']=="High")
+
+80%
+
+@elseif($currencyData['status']=="Medium")
+
+50%
+
+@else
+
+25%
+
+@endif
+
+">
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+@endif
 
 
 </div>
@@ -304,21 +415,13 @@ Risk Status
 @endif
 
 
-
-
-
-
-
 {{-- ================= GLOBAL CURRENCY SUMMARY ================= --}}
-
 
 
 <div class="row g-4">
 
 
-
 <div class="col-xl-3 col-md-6">
-
 
 <div class="currency-card">
 
@@ -351,12 +454,16 @@ USD → IDR
 </span>
 
 
-</div>
+<p class="text-muted mt-2">
+
+Indonesia Trading Reference
+
+</p>
 
 
 </div>
 
-
+</div>
 
 
 
@@ -364,43 +471,55 @@ USD → IDR
 
 <div class="col-xl-3 col-md-6">
 
-
 <div class="currency-card">
 
 
 <div class="currency-symbol">
 
-🇪🇺
+🌍
 
 </div>
 
 
 <h6>
 
-USD → EUR
+Selected Currency
 
 </h6>
 
 
 <h2>
 
-0.88
+@if($currencyData)
+
+{{$currencyData['currency']}}
+
+@else
+
+-
+
+@endif
 
 </h2>
 
 
-<span class="text-success">
+<span class="text-primary">
 
-Stable
+Market Monitoring
 
 </span>
 
 
-</div>
+<p class="text-muted mt-2">
+
+Current selected country currency
+
+</p>
 
 
 </div>
 
+</div>
 
 
 
@@ -409,27 +528,43 @@ Stable
 
 <div class="col-xl-3 col-md-6">
 
-
 <div class="currency-card">
 
 
 <div class="currency-symbol">
 
-🇨🇳
+📈
 
 </div>
 
 
 <h6>
 
-USD → CNY
+Exchange Trend
 
 </h6>
 
 
 <h2>
 
-6.78
+@if($currencyData)
+
+@if($currencyData['status']=="High")
+
+Volatile
+
+@else
+
+Stable
+
+@endif
+
+
+@else
+
+Normal
+
+@endif
 
 </h2>
 
@@ -441,8 +576,14 @@ Monitoring
 </span>
 
 
-</div>
+<p class="text-muted mt-2">
 
+Currency movement analysis
+
+</p>
+
+
+</div>
 
 </div>
 
@@ -453,7 +594,6 @@ Monitoring
 
 
 <div class="col-xl-3 col-md-6">
-
 
 <div class="currency-card danger">
 
@@ -467,27 +607,42 @@ Monitoring
 
 <h6>
 
-Currency Risk
+Trade Impact
 
 </h6>
 
 
 <h2>
 
-High
+@if($currencyData)
+
+@if($currencyData['status']=="High")
+
+High Risk
+
+@else
+
+Low Risk
+
+@endif
+
+@else
+
+Medium
+
+@endif
 
 </h2>
 
 
 <span>
 
-Trade Cost Warning
+Import Cost Evaluation
 
 </span>
 
 
 </div>
-
 
 </div>
 
@@ -554,8 +709,6 @@ Currency fluctuation impact on import/export cost
 
 
 
-
-
 <div class="col-lg-4">
 
 
@@ -573,49 +726,316 @@ Currency fluctuation impact on import/export cost
 
 
 
+@if($currencyData)
+
+
+
 <div class="insight warning">
+
 
 <strong>
 
-USD Strengthening
+💱 {{$currencyData['currency']}} Movement
 
 </strong>
 
+
 <br>
 
+
+@if($currencyData['status']=="High")
+
+Currency volatility detected.
 Import cost may increase.
 
+@else
+
+Currency condition is relatively stable.
+Trade cost is manageable.
+
+@endif
+
+
 </div>
+
+
 
 
 
 <div class="insight success">
 
-<strong>
-
-EUR Stable
-
-</strong>
-
-<br>
-
-European trade route safe.
-
-</div>
-
-
-
-<div class="insight danger">
 
 <strong>
 
-CNY Volatility
+📦 Supply Chain Impact
 
 </strong>
 
+
 <br>
 
-Monitor China suppliers.
+
+@if($currencyData['status']=="High")
+
+Consider reviewing supplier contracts and payment timing.
+
+@else
+
+Current currency supports stable international transactions.
+
+@endif
+
+
+</div>
+
+
+
+
+
+<div class="insight">
+
+
+<strong>
+
+🤖 AI Recommendation
+
+</strong>
+
+
+<br>
+
+
+@if($currencyData['status']=="High")
+
+Delay long-term contract negotiation
+until currency becomes stable.
+
+@else
+
+Suitable for continuing import/export activities.
+
+@endif
+
+
+</div>
+
+
+
+
+@else
+
+
+
+<div class="insight success">
+
+
+<strong>
+
+🌎 Global Currency Monitoring
+
+</strong>
+
+
+<br>
+
+Select a country to generate AI currency analysis.
+
+
+</div>
+
+
+
+@endif
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+{{-- ================= BUSINESS IMPACT ================= --}}
+
+@if($currencyData)
+
+<div class="row g-4 mb-4">
+
+
+<div class="col-lg-8">
+
+<div class="card-custom p-4">
+
+
+<h4 class="fw-bold">
+
+📊 Currency Business Impact
+
+</h4>
+
+
+<p class="text-muted">
+
+Impact analysis for international trade decision
+
+</p>
+
+
+
+<div class="row g-3 mt-3">
+
+
+<div class="col-md-6">
+
+
+<div class="impact-box">
+
+<h6>
+💰 Import Cost Impact
+</h6>
+
+
+<h4 class="text-warning">
+
+@if($currencyData['status']=="High")
+
+Increase Risk
+
+@else
+
+Stable Cost
+
+@endif
+
+</h4>
+
+
+<p>
+Currency movement affects purchasing cost from 
+{{ $currencyData['name'] }} suppliers.
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="impact-box">
+
+
+<h6>
+🚢 Export Competitiveness
+</h6>
+
+
+<h4 class="text-success">
+
+Positive
+
+</h4>
+
+
+<p>
+
+Exchange rate condition may support export pricing strategy.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="impact-box">
+
+
+<h6>
+📦 Supply Chain Decision
+</h6>
+
+
+<h4>
+
+@if($currencyData['status']=="High")
+
+Review Supplier
+
+@else
+
+Continue Trade
+
+@endif
+
+</h4>
+
+
+<p>
+
+Recommendation based on currency stability.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="impact-box">
+
+
+<h6>
+🤖 AI Recommendation
+</h6>
+
+
+<h4>
+
+Monitor Currency
+
+</h4>
+
+
+<p>
+
+Keep monitoring exchange fluctuation before contract agreement.
+
+</p>
+
+
+</div>
+
 
 </div>
 
@@ -628,12 +1048,123 @@ Monitor China suppliers.
 </div>
 
 
+</div>
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="card-custom p-4">
+
+
+<h4 class="fw-bold">
+
+🌐 Currency Profile
+
+</h4>
+
+
+<hr>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Country
+
+</span>
+
+
+<strong>
+
+{{$currencyData['name']}}
+
+</strong>
+
 
 </div>
 
 
 
 
+<div class="summary-row">
+
+<span>
+
+Currency
+
+</span>
+
+
+<strong>
+
+{{$currencyData['currency']}}
+
+</strong>
+
+
+</div>
+
+
+
+
+<div class="summary-row">
+
+<span>
+
+USD Exchange
+
+</span>
+
+
+<strong>
+
+{{number_format($currencyData['rate'],4)}}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+<div class="summary-row">
+
+<span>
+
+Market Status
+
+</span>
+
+
+<strong>
+
+{{$currencyData['status']}}
+
+</strong>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+@endif
 
 
 
@@ -701,22 +1232,39 @@ Trade Impact
 <tbody>
 
 
+@if($currencyData)
+
 
 <tr>
 
 <td>
 
-USD / IDR
+USD / {{$currencyData['currency']}}
 
 </td>
 
+
 <td>
 
-18,071
+{{number_format($currencyData['rate'],4)}}
 
 </td>
 
+
 <td>
+
+
+@if($currencyData['status']=="High")
+
+<span class="badge bg-danger">
+
+High Risk
+
+</span>
+
+
+@else
+
 
 <span class="badge bg-success">
 
@@ -724,11 +1272,27 @@ Stable
 
 </span>
 
+
+@endif
+
+
 </td>
+
+
 
 <td>
 
-Low
+
+@if($currencyData['status']=="High")
+
+High Cost Impact
+
+@else
+
+Low Cost Impact
+
+@endif
+
 
 </td>
 
@@ -742,72 +1306,59 @@ Low
 
 <td>
 
-USD / EUR
-
-</td>
-
-<td>
-
-0.88
-
-</td>
-
-<td>
-
-<span class="badge bg-success">
-
-Stable
-
-</span>
+{{$currencyData['currency']}} Market
 
 </td>
 
 
 <td>
 
-Safe
+Monitoring
 
 </td>
 
-</tr>
-
-
-
-
-
-<tr>
 
 <td>
 
-USD / CNY
-
-</td>
-
-<td>
-
-6.78
-
-</td>
-
-<td>
 
 <span class="badge bg-warning">
 
-Warning
+Watch
 
 </span>
+
 
 </td>
 
 
 <td>
 
-Medium
+Exchange Movement
 
 </td>
 
 
 </tr>
+
+
+
+@else
+
+
+
+<tr>
+
+<td colspan="4" class="text-center text-muted">
+
+Select country to view currency monitoring
+
+</td>
+
+</tr>
+
+
+
+@endif
 
 
 
@@ -871,20 +1422,115 @@ labels:[
 
 datasets:[{
 
+label:
 
-label:'USD/IDR',
+@if($currencyData)
+
+'USD / {{$currencyData["currency"]}}'
+
+@else
+
+'USD / IDR'
+
+@endif
 
 
-data:[
 
+,
+
+
+data:
+
+
+@if($currencyData)
+
+
+@if($currencyData['currency']=="EUR")
+
+[
+0.91,
+0.90,
+0.89,
+0.88,
+0.87,
+0.88
+]
+
+
+@elseif($currencyData['currency']=="CNY")
+
+
+[
+6.92,
+6.85,
+6.80,
+6.75,
+6.78,
+6.78
+]
+
+
+@elseif($currencyData['currency']=="JPY")
+
+
+[
+145,
+148,
+150,
+152,
+151,
+149
+]
+
+
+@elseif($currencyData['currency']=="IDR")
+
+
+[
 15500,
 15800,
 16000,
 16700,
 17200,
 18071
+]
 
-],
+
+@else
+
+
+[
+1,
+1.02,
+1.04,
+1.03,
+1.05,
+1.06
+]
+
+
+@endif
+
+
+
+@else
+
+
+[
+15500,
+15800,
+16000,
+16700,
+17200,
+18071
+]
+
+
+@endif
+
+
+
+,
 
 
 borderWidth:3
@@ -1045,7 +1691,19 @@ padding:28px;
 border-radius:25px;
 
 
-height:210px;
+min-height:230px;
+
+
+height:auto;
+
+
+display:flex;
+
+
+flex-direction:column;
+
+
+justify-content:flex-start;
 
 
 box-shadow:
@@ -1055,6 +1713,31 @@ box-shadow:
 
 transition:.3s;
 
+
+}
+
+.currency-result-card h6,
+.currency-card h6{
+
+font-weight:700;
+
+margin-bottom:15px;
+
+}
+
+
+.currency-result-card h2,
+.currency-card h2{
+
+margin-bottom:10px;
+
+}
+
+
+.currency-result-card span,
+.currency-card span{
+
+margin-top:auto;
 
 }
 
@@ -1153,6 +1836,83 @@ background:#fee2e2;
 
 }
 
+.impact-box{
 
+background:#f8fafc;
+
+padding:20px;
+
+border-radius:20px;
+
+height:170px;
+
+border-left:5px solid #0284c7;
+
+}
+
+
+.impact-box h6{
+
+font-weight:700;
+
+}
+
+
+
+.impact-box p{
+
+font-size:14px;
+
+color:#64748b;
+
+}
+
+
+
+.summary-row{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:14px 0;
+
+border-bottom:1px solid #eee;
+
+}
+
+
+
+.summary-row span{
+
+color:#64748b;
+
+}
+
+.risk-progress{
+
+    width:100%;
+
+    height:12px;
+
+    background:#e5e7eb;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+
+
+.risk-progress-bar{
+
+    height:100%;
+
+    border-radius:20px;
+
+    background:#22c55e;
+
+}
 
 </style>

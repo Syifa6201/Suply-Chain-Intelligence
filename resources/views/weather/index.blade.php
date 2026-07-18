@@ -6,40 +6,68 @@
 
     <div>
 
-        <h2 class="fw-bold">
-            🌦 Weather Intelligence
+        <div class="d-flex justify-content-between align-items-center">
 
-            <form method="GET" class="mb-4">
 
-        <div class="row">
+<div>
 
-        <div class="col-md-4">
+<h4 class="fw-bold">
 
-        <select
-        name="country"
-        class="form-select"
-        onchange="this.form.submit()">
+🌧 Rainfall & Weather Map
 
-        @foreach($countries as $country)
+</h4>
 
-        <option
-        value="{{ $country->name }}"
-        {{ $selectedCountry==$country->name?'selected':'' }}>
+<p class="text-muted mb-0">
 
-        {{ $country->name }}
+Weather monitoring for
 
-        </option>
+<strong>{{ $selectedCountry }}</strong>
 
-        @endforeach
+showing rainfall intensity and logistics location.
 
-        </select>
+</p>
 
-        </div>
+</div>
+
+
+<form method="GET">
+
+<div class="d-flex gap-2">
+
+
+<select
+
+name="country"
+
+class="form-select"
+
+onchange="this.form.submit()">
+
+
+@foreach($countries as $country)
+
+<option
+
+value="{{ $country->name }}"
+
+{{ $selectedCountry==$country->name?'selected':'' }}>
+
+{{ $country->name }}
+
+</option>
+
+@endforeach
+
+
+</select>
+
 
 </div>
 
 </form>
-        </h2>
+
+
+</div>
 
         <small class="text-muted">
             Real-time Global Weather Monitoring
@@ -53,6 +81,87 @@
 
 </div>
 
+<div class="card card-custom p-4 mb-4">
+
+
+<div class="row text-center">
+
+
+<div class="col-md-3">
+
+<h6>
+
+🌍 Country
+
+</h6>
+
+<h4>
+
+{{ $selectedCountry }}
+
+</h4>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<h6>
+
+📍 Latitude
+
+</h6>
+
+<h4>
+
+{{ $latitude }}
+
+</h4>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<h6>
+
+📍 Longitude
+
+</h6>
+
+<h4>
+
+{{ $longitude }}
+
+</h4>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<h6>
+
+🛰 Monitoring
+
+</h6>
+
+<span class="badge bg-success">
+
+LIVE
+
+</span>
+
+</div>
+
+
+</div>
+
+
+</div>
 
 <div class="row g-4">
 
@@ -133,6 +242,8 @@
         </div>
 
     </div>
+
+    
 
     <div class="col-lg-3">
 
@@ -215,9 +326,31 @@
 
             <hr>
 
+            <div class="d-flex gap-3 mb-3">
+
+<span class="badge bg-success">
+
+🟢 Low Rain
+
+</span>
+
+<span class="badge bg-warning text-dark">
+
+🟡 Moderate Rain
+
+</span>
+
+<span class="badge bg-danger">
+
+🔴 Heavy Rain
+
+</span>
+
+</div>
+
             <div id="weatherMap"
-                 style="height:500px;border-radius:18px;">
-            </div>
+     style="width:100%; height:500px; border-radius:20px;">
+</div>
 
         </div>
 
@@ -506,6 +639,69 @@
 
     </div>
 
+    <div class="card card-custom p-4 mt-4">
+
+
+<h4>
+
+🚢 Shipping Recommendation
+
+</h4>
+
+
+<hr>
+
+
+
+@if($stormRisk=="HIGH")
+
+<div class="alert alert-danger">
+
+Delay shipment if possible.
+
+Sea freight may experience significant disruption.
+
+</div>
+
+@elseif($stormRisk=="MEDIUM")
+
+<div class="alert alert-warning">
+
+Monitor weather every 6 hours before dispatch.
+
+</div>
+
+@else
+
+<div class="alert alert-success">
+
+Weather is suitable for shipping.
+
+Recommended to continue logistics operations.
+
+</div>
+
+@endif
+
+
+</div>
+
+Sea Transport
+
+92%
+
+Road Transport
+
+81%
+
+Air Freight
+
+95%
+
+Port Operation
+
+88%
+
 </div>
 
 <link rel="stylesheet"
@@ -516,43 +712,40 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded",function(){
-
-    L.map('weatherMap').setView(
-    [
+    const map = L.map('weatherMap').setView([
         {{ $latitude }},
         {{ $longitude }}
-    ],
-    7
-);
+    ], 5);
 
     L.tileLayer(
-
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
         {
-
-            maxZoom:18
-
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
         }
-
     ).addTo(map);
 
     L.marker([
         {{ $latitude }},
         {{ $longitude }}
     ])
+    .addTo(map)
+    .bindPopup(`
+        <b>{{ $selectedCountry }}</b><br>
+        🌡 {{ $temperature }} °C<br>
+        🌧 Rain: {{ $rain }} mm<br>
+        💨 Wind: {{ $wind }} km/h
+    `)
+    .openPopup();
 
-        .addTo(map)
-
-        .bindPopup(`
-s
-
-        .openPopup();
+    // penting jika map berada di dalam card bootstrap
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 300);
 
 });
-
 </script>
 
 <script>
@@ -687,4 +880,14 @@ document.addEventListener("DOMContentLoaded",function(){
 
 </div>
 
+
 @endsection
+
+<style>
+
+#weatherMap{
+    width:100%;
+    height:500px;
+}
+
+</style>
