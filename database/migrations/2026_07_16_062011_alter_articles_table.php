@@ -10,20 +10,28 @@ return new class extends Migration
     {
         Schema::table('articles', function (Blueprint $table) {
 
-            $table->string('category')->after('title');
+            if (!Schema::hasColumn('articles', 'category')) {
+                $table->string('category')->after('title');
+            }
 
-            $table->string('image')->nullable()->after('content');
+            if (!Schema::hasColumn('articles', 'image')) {
+                $table->string('image')->nullable()->after('content');
+            }
 
-            $table->enum('status', [
-                'Draft',
-                'Published'
-            ])->default('Draft')->after('image');
+            if (!Schema::hasColumn('articles', 'status')) {
+                $table->enum('status', [
+                    'Draft',
+                    'Published'
+                ])->default('Draft')->after('image');
+            }
 
-            $table->foreignId('author_id')
-                ->nullable()
-                ->after('status')
-                ->constrained('users')
-                ->nullOnDelete();
+            if (!Schema::hasColumn('articles', 'author_id')) {
+                $table->foreignId('author_id')
+                    ->nullable()
+                    ->after('status')
+                    ->constrained('users')
+                    ->nullOnDelete();
+            }
 
         });
     }
@@ -32,14 +40,31 @@ return new class extends Migration
     {
         Schema::table('articles', function (Blueprint $table) {
 
-            $table->dropForeign(['author_id']);
+            if (Schema::hasColumn('articles', 'author_id')) {
+                $table->dropForeign(['author_id']);
+            }
 
-            $table->dropColumn([
-                'category',
-                'image',
-                'status',
-                'author_id'
-            ]);
+            $columns = [];
+
+            if (Schema::hasColumn('articles', 'category')) {
+                $columns[] = 'category';
+            }
+
+            if (Schema::hasColumn('articles', 'image')) {
+                $columns[] = 'image';
+            }
+
+            if (Schema::hasColumn('articles', 'status')) {
+                $columns[] = 'status';
+            }
+
+            if (Schema::hasColumn('articles', 'author_id')) {
+                $columns[] = 'author_id';
+            }
+
+            if (!empty($columns)) {
+                $table->dropColumn($columns);
+            }
 
         });
     }
