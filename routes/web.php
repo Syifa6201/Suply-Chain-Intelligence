@@ -36,6 +36,7 @@ use App\Http\Controllers\TradeRiskController;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\Api\VesselApiController;
 use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\ArticleController;
 /*
 |--------------------------------------------------------------------------
 | Authentication
@@ -245,7 +246,8 @@ Route::controller(NewsController::class)->group(function () {
 
 });
 
-
+Route::get('/articles/{article}', [ArticleController::class, 'show'])
+    ->name('articles.show');
 
 /*
 |--------------------------------------------------------------------------
