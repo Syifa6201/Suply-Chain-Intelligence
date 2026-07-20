@@ -160,36 +160,52 @@ class ShippingPlannerService
     }
 
     // Weather
-    switch ($weather) {
+switch ($weather) {
 
-        case 'Good':
-            $score += 3;
-            break;
+    case 'Excellent':
+        $score += 8;
+        break;
 
-        case 'Moderate':
-            $score -= 5;
-            break;
+    case 'Good':
+        $score += 3;
+        break;
 
-        case 'Poor':
-            $score -= 15;
-            break;
-    }
+    case 'Moderate':
+        $score -= 5;
+        break;
+
+    case 'Poor':
+        $score -= 15;
+        break;
+
+    case 'Extreme':
+        $score -= 25;
+        break;
+}
 
     // Risk
-    switch ($risk) {
+switch ($risk) {
 
-        case 'Low':
-            $score += 5;
-            break;
+    case 'Very Low':
+        $score += 8;
+        break;
 
-        case 'Medium':
-            $score -= 10;
-            break;
+    case 'Low':
+        $score += 5;
+        break;
 
-        case 'High':
-            $score -= 25;
-            break;
-    }
+    case 'Medium':
+        $score -= 10;
+        break;
+
+    case 'High':
+        $score -= 25;
+        break;
+
+    case 'Critical':
+        $score -= 40;
+        break;
+}
 
     // Currency
     switch ($currency) {

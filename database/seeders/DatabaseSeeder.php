@@ -54,5 +54,9 @@ $this->call([
 
 ]);
 
+$this->call([
+    ShippingPortSeeder::class,
+]);
+
     }
 }
