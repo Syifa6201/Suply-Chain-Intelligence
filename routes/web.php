@@ -37,6 +37,7 @@ use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\Api\VesselApiController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ShippingPlannerController;
 /*
 |--------------------------------------------------------------------------
 | Authentication
@@ -349,6 +350,26 @@ Route::controller(TradePredictionController::class)->group(function () {
         '/trade-prediction',
         'index'
     )->name('trade.prediction');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Shipping Planner
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(ShippingPlannerController::class)->group(function () {
+
+    Route::get(
+        '/shipping-planner',
+        'index'
+    )->name('shipping.index');
+
+    Route::post(
+        '/shipping-planner/calculate',
+        'calculate'
+    )->name('shipping.calculate');
 
 });
 

@@ -267,9 +267,7 @@ Trade Intelligence
 
 <!-- AI ENGINE -->
 
-
 <div class="sidebar-section">
-
 
 <div class="sidebar-title">
 
@@ -277,29 +275,30 @@ AI ENGINE
 
 </div>
 
-
-
-
 <a href="#"
 onclick="alert('Recommendation Engine Coming Soon')">
 
+    <i class="bi bi-lightning-charge"></i>
 
-<i class="bi bi-lightning-charge"></i>
-
-
-Recommendation Engine
-
+    Recommendation Engine
 
 </a>
 
+<a href="{{ route('trade.prediction') }}"
+class="{{ request()->routeIs('trade.prediction') ? 'active-menu' : '' }}">
 
+    <i class="bi bi-stars"></i>
 
-<a href="{{route('trade.prediction')}}">
-<i class="bi bi-stars"></i>
+    Trade Prediction
 
+</a>
 
-Trade Prediction
+<a href="{{ route('shipping.index') }}"
+class="{{ request()->routeIs('shipping.*') ? 'active-menu' : '' }}">
 
+    <i class="bi bi-box2"></i>
+
+    Shipping Planner
 
 </a>
 
@@ -312,11 +311,7 @@ class="{{ request()->routeIs('watchlist.*') ? 'active-menu' : '' }}">
 
 </a>
 
-
-
 </div>
-
-
 
 
 

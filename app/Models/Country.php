@@ -73,5 +73,10 @@ public function watchlists()
     );
 }
 
+public function shippingPorts()
+{
+    return $this->hasMany(ShippingPort::class);
+}
+
 
 }

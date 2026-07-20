@@ -267,6 +267,15 @@ Trade Prediction
 
 </a>
 
+<a href="{{ route('shipping.index') }}"
+class="dashboard-menu">
+
+    <i class="bi bi-box2"></i>
+
+    Shipping Planner
+
+</a>
+
 <a href="{{ route('watchlist.index') }}" class="dashboard-menu">
 
     <i class="bi bi-star-fill"></i>
